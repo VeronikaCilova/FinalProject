@@ -20,9 +20,10 @@ class Profile(Model):
     position = ForeignKey(Position, null=True, blank=True, on_delete=DO_NOTHING)
     picture = ImageField(upload_to="images/", default=None, null=False, blank=False)
     supervisor = ForeignKey('Profile', null=True, blank=True, on_delete=SET_NULL)
+    bio = TextField(null=True, blank=True)
 
     #class Meta:
-        #ordering = ['last_name', 'first_name']
+        #ordering = [last_name', 'first_name']
 
     def __str__(self):
         return f'{self.user.first_name} ({self.user.last_name})'

@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Portal</title>
+    <style>
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #45a049;
+        }
+
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        nav ul li {
+            display: inline;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div>
+        <h1>Welcome to Personal Portal application</h1>
+        {% if user.is_authenticated %}
+            <p>Hello, {{ user.username }}!</p>
+            <p><a href="{% url 'logout' %}" class="button">Logout</a></p>
+        {% else %}
+            <h3>Hello, would you like to enjoy more content? Please sign up or sign in below:</h3>
+            <p><a href="{% url 'login' %}" class="button">Login</a></p>
+            <p><a href="{% url 'signup' %}" class="button">Register</a></p>
+        {% endif %}
+    </div>
+</body>
+</html>
+{% endblock %}
