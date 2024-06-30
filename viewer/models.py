@@ -1,10 +1,8 @@
 from django.contrib.auth.models import User
-
-from django.db.models import Model, CharField, EmailField, ForeignKey, DO_NOTHING, ImageField, SET_NULL, TextField, \
-    DateField, TextChoices
-from django.db.models import Model, CharField, EmailField, ForeignKey, DO_NOTHING, ImageField, SET_NULL
+from django.db.models import (Model, CharField, ForeignKey, DO_NOTHING, ImageField, SET_NULL, TextField, DateField,
+                              TextChoices)
 from django.forms import DateTimeField
-from pip._vendor.distlib.markers import Evaluator
+
 
 class Position(Model):
     position_name = CharField(max_length=128)
@@ -13,11 +11,10 @@ class Position(Model):
     class Meta:
         ordering = ['position_name']
 
-
     def __str__(self):
         return self.position_name
 
-# Create your models here.
+
 class Profile(Model):
     user = ForeignKey(User, on_delete=DO_NOTHING)
     position = ForeignKey(Position, null=True, blank=True, on_delete=DO_NOTHING)
