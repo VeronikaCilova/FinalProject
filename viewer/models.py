@@ -1,15 +1,14 @@
 from django.contrib.auth.models import User
-from django.db import models
-from django.db.models import Model, CharField, ForeignKey, DO_NOTHING, ImageField, SET_NULL, TextField, DateField, TextChoices, DateTimeField, BooleanField
+from django.db.models import (Model, CharField, ForeignKey, DO_NOTHING, ImageField, SET_NULL, TextField, DateField,
+                              TextChoices, DateTimeField, BooleanField)
 
 
 class Position(Model):
     position_name = CharField(max_length=128)
     department = CharField(max_length=128)
 
-    #class Meta:
-        #ordering = ['position_name']
-
+    # class Meta:
+    #     ordering = ['position_name']
 
     def __str__(self):
         return self.position_name
@@ -20,9 +19,10 @@ class Profile(Model):
     position = ForeignKey(Position, null=True, blank=True, on_delete=DO_NOTHING)
     picture = ImageField(upload_to="images/", default=None, null=False, blank=False)
     supervisor = ForeignKey('Profile', null=True, blank=True, on_delete=SET_NULL)
+    bio = TextField(null=True, blank=True)
 
-    #class Meta:
-        #ordering = ['last_name', 'first_name']
+    # class Meta:
+    #     ordering = ['last_name', 'first_name']
 
     def __str__(self):
         return f'{self.user.first_name} ({self.user.last_name})'
@@ -47,8 +47,8 @@ class Goal(Model):
     priority = CharField(max_length=64, choices=Priority.choices, null=True, blank=True)
     status = CharField(max_length=10, choices=Status.choices, null=True, blank=True)
 
-    #class Meta:
-        #ordering = ['name', 'deadline']
+    # class Meta:
+    #     ordering = ['name', 'deadline']
 
     def __str__(self):
         return f"{self.name} ({self.deadline})"
@@ -87,5 +87,3 @@ class Feedback(Model):
 
     def __str__(self):
         return f"{self.subject_of_review} ({self.creation_date})"
-
-

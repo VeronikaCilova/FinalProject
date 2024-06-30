@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="profile-details">
+    <h1>{{ profile.user.first_name}} {{ profile.user.last_name }}</h1>
+    <div class="profile-images">
+        <span class="profile-image">
+            <img src="{{ profile.picture.url }}" alt="Profile Picture" width="150px">
+        </span>
+    </div>
+    <p>Position: {{ profile.position }}</p>
+    <p>Team Leader: {{ profile.supervisor }}</p>
+    <p>Summary: {{ profile.bio }}</p>
+</div>
+
+{% endblock %}

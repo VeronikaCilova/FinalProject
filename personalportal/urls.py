@@ -16,6 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from viewer.views import ProfileView
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('profile/<pk>/', ProfileView.as_view(), name='profile'),
 ]
