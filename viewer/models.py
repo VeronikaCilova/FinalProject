@@ -1,7 +1,9 @@
 from django.contrib.auth.models import User
-from django.db.models import (Model, CharField, ForeignKey, DO_NOTHING, ImageField, SET_NULL, TextField, DateField,
-                              TextChoices)
-from django.forms import DateTimeField
+
+from django.db.models import Model, CharField, EmailField, ForeignKey, DO_NOTHING, ImageField, SET_NULL, TextField, \
+    DateField, TextChoices
+from django.db.models import Model, CharField, EmailField, ForeignKey, DO_NOTHING, ImageField, SET_NULL
+from django.forms import DateTimeField, models
 
 
 class Position(Model):
@@ -11,10 +13,11 @@ class Position(Model):
     class Meta:
         ordering = ['position_name']
 
+
     def __str__(self):
         return self.position_name
 
-
+# Create your models here.
 class Profile(Model):
     user = ForeignKey(User, on_delete=DO_NOTHING)
     position = ForeignKey(Position, null=True, blank=True, on_delete=DO_NOTHING)
@@ -62,12 +65,20 @@ class Review(Model):
     goal = CharField(max_length=500, null=True, blank=True)
     training = CharField(max_length=250, null=True, blank=True)
 
+    def __str__(self):
+        return f"{self.subject_of_review} ({self.creation_date})"
 
 class Task(Model):
+    title =CharField(max_length=120)
+    description = TextField(null=True, blank=True)
     creation_date = DateTimeField(auto_now_add=True)
-    note = CharField(max_length=500, null=True, blank=True)
+    due_date = DateTimeField(default=None, null=True, blank=True)
     to_do_list = CharField(max_length=500, null=True, blank=True)
     creator = ForeignKey(Profile, on_delete=DO_NOTHING)
+    completed = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.title
 
 
 class Feedback(Model):
@@ -76,6 +87,7 @@ class Feedback(Model):
     evaluator = ForeignKey(Profile, on_delete=DO_NOTHING)
     subject_of_review = ForeignKey(Profile, on_delete=DO_NOTHING)
 
-
+    def __str__(self):
+        f"{self.subject_of_review} ({self.creation_date})"
 
 
