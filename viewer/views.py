@@ -5,6 +5,9 @@ from django.views.generic import DetailView
 from viewer.models import Profile
 
 
+def home(request):
+    return render(request, 'home.html')
+
 class ProfileView(View):
     def get(self, request, pk):
         if Profile.objects.filter(id=pk).exists():  # otestujeme, zda profil existuje
