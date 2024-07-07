@@ -4,14 +4,11 @@ from django.db.transaction import atomic
 from django.forms import CharField, Textarea, ModelForm
 from django.shortcuts import render
 from django.views import View
-from django.views.generic import DetailView
-
 
 from django.urls import reverse_lazy
-from django.contrib.auth.views import LoginView, PasswordChangeView
-from django.views.generic import CreateView
+from django.views.generic import CreateView, ListView
 
-from viewer.models import Profile
+from viewer.models import Profile, Goal
 
 
 def home(request):
@@ -52,14 +49,6 @@ class ProfileView(View):
             result = Profile.objects.get(id=pk)
             return render(request, 'user_page.html', {'title': 'MyProfile', 'profile': result})
 
-        # TODO: home.html
-        return render(request, 'home.html')
-
-# class ProfileView(DetailView):
-#     model = Profile
-#     template_name = 'user_page.html'
-    # context_object_name = 'profile'
-
 
 class ProfileForm(ModelForm):
     class Meta:
@@ -71,3 +60,21 @@ class SignUpView(CreateView):
     form_class = SignUpForm
     template_name = 'signup.html'
     success_url = reverse_lazy('home')
+
+
+class GoalView(View):
+    def get(self, request, pk):
+        if Goal.objects.filter(id=pk).exists():  # otestujeme, zda film existuje
+            result = Goal.objects.get(id=pk)
+            return render(request, 'goal.html', {'title': result, 'goal': result})
+
+        result = Goal.objects.all()
+        return render(request,
+                      'goals.html',
+                      {'title': 'Goals', 'goals': result})
+
+
+class GoalsView(ListView):
+    template_name = 'goals.html'
+    model = Goal
+    context_object_name = 'goals'

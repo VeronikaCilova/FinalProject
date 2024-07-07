@@ -29,5 +29,11 @@ urlpatterns = [
     path('accounts/signup/', SignUpView.as_view(), name='signup'),
     path('accounts/password_change/', SubmittablePasswordChangeView.as_view(), name='password_change'),
     path('accounts/', include('django.contrib.auth.urls')),
+
+    path('accounts/profile', ProfileView.as_view(), name='profile_detail'),
     path('profile/<pk>/', ProfileView.as_view(), name='profile'),
+
+    path('goals/', GoalsView.as_view(), name='goals'),
+    path('goal/<pk>/', GoalView.as_view(), name='goal'),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

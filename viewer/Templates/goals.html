@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Personal goals overview</h1>
+<ul>
+    {% for goal in goals %}
+        <li>
+            {{ goal.name }} : {{ goal.deadline|date:"j. n. Y" }} / {{ goal.priority|title }} / {{ goal.status|upper }}
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="goal-details">
+    <h1>Goal: {{ goal.name }}</h1>
+</div>
+    <p>Description: {{ goal.description }}</p>
+    <p>Deadline: {{ goal.deadline|date:"j. n. Y" }}</p>
+    <p>Priority: {{ goal.priority }}</p>
+    <p>Status: {{ goal.status }}</p>
+
+<!--<a href="{% url 'goal_update' goal.id %}">Update</a>-->
+<!--<a href="{% url 'goal_delete' goal.id %}">Delete</a>-->
+
+{% endblock %}
