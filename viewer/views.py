@@ -6,7 +6,7 @@ from django.shortcuts import render
 from django.views import View
 from django.views.generic import DetailView
 
-from viewer.models import Profile
+
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.views.generic import CreateView
@@ -30,23 +30,21 @@ class SubmittablePasswordChangeView(PasswordChangeView):
 class SignUpForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         fields = ['first_name', 'last_name', 'password1', 'password2']
-        position = CharField(label='What is your position', widget=Textarea)
-        biography = CharField(label='Tell us more about you', widget=Textarea, min_length=40)
+
+    position = CharField(label='What is your position', widget=Textarea)
+    bio = CharField(label='Tell us more about you', widget=Textarea, min_length=40)
 
     @atomic
     def save(self, commit=True):
         self.instance.is_active = True
         result = super().save(commit)
         position = self.cleaned_data['position']
-        biography = self.cleaned_data['biography']
-        profile = Profile(position=position, biography=biography, user=result)
+        bio = self.cleaned_data['bio']
+        profile = Profile(position=position, bio=bio, user=result)
         if commit:
             profile.save()
         return result
 
-
-def home(request):
-    return render(request, 'home.html')
 
 class ProfileView(View):
     def get(self, request, pk):
@@ -61,6 +59,7 @@ class ProfileView(View):
 #     model = Profile
 #     template_name = 'user_page.html'
     # context_object_name = 'profile'
+
 
 class ProfileForm(ModelForm):
     class Meta:
