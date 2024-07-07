@@ -34,6 +34,9 @@ urlpatterns = [
     path('profile/<pk>/', ProfileView.as_view(), name='profile'),
 
     path('goals/', GoalsView.as_view(), name='goals'),
+    path('goal/create/', GoalCreateView.as_view(), name='goal_create'),
+    path('goal/update/<pk>/', GoalUpdateView.as_view(), name='goal_update'),
+    path('goal/delete/<pk>/', GoalDeleteView.as_view(), name='goal_delete'),
     path('goal/<pk>/', GoalView.as_view(), name='goal'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

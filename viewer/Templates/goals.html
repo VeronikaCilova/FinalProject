@@ -6,7 +6,23 @@
     {% for goal in goals %}
         <li>
             {{ goal.name }} : {{ goal.deadline|date:"j. n. Y" }} / {{ goal.priority|title }} / {{ goal.status|upper }}
+            {% if user.is_authenticated %}
+                {% if perms.viewer.change_goal %}
+                    <a href="{% url 'goal_update' goal.id %}">✏️Update</a>
+                {% endif %}
+                {% if perms.viewer.delete_goal %}
+                    <a href="{% url 'goal_delete' goal.id %}">❌Delete</a>
+                {% endif %}
+            {% endif %}
         </li>
+    {% empty %}
+        <p>List of goals is empty.</p>
     {% endfor %}
 </ul>
+
+{% if user.is_authenticated %}
+    {% if perms.viewer.add_goal %}
+        <a href="{% url 'goal_create' %}">✖️Create</a>
+    {% endif %}
+{% endif %}
 {% endblock %}

@@ -1,4 +1,7 @@
+from concurrent.futures._base import LOGGER
+
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.db.transaction import atomic
 from django.forms import CharField, Textarea, ModelForm
@@ -6,9 +9,10 @@ from django.shortcuts import render
 from django.views import View
 
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView
+from django.views.generic import CreateView, ListView, FormView, UpdateView, DeleteView
 
 from viewer.models import Profile, Goal
+import re
 
 
 def home(request):
@@ -64,7 +68,7 @@ class SignUpView(CreateView):
 
 class GoalView(View):
     def get(self, request, pk):
-        if Goal.objects.filter(id=pk).exists():  # otestujeme, zda film existuje
+        if Goal.objects.filter(id=pk).exists():
             result = Goal.objects.get(id=pk)
             return render(request, 'goal.html', {'title': result, 'goal': result})
 
@@ -78,3 +82,63 @@ class GoalsView(ListView):
     template_name = 'goals.html'
     model = Goal
     context_object_name = 'goals'
+
+
+class GoalModelForm(ModelForm):
+
+    class Meta:
+        model = Goal
+        fields = '__all__'
+
+    def clean_name(self):
+        initial_data = super().clean()
+        initial = initial_data['name'].strip()
+        return initial.capitalize()
+
+    def clean_description(self):
+        # Force each sentence of the description to be capitalized.
+        initial = self.cleaned_data['description']
+        sentences = re.sub(r'\s*\.\s*', '.', initial).split('.')
+        return '. '.join(sentence.capitalize() for sentence in sentences)
+
+    def clean(self):
+        result = super().clean()
+        return result
+
+
+class GoalFormView(FormView):
+    template_name = 'form.html'
+    form_class = GoalModelForm
+    success_url = reverse_lazy('goal_create')
+
+    def form_valid(self, form):
+        result = super().form_valid(form)
+        cleaned_data = form.cleaned_data
+        Goal.objects.create(name=cleaned_data['name'])
+        return result
+
+    def form_invalid(self, form):
+        LOGGER.warning('User provided invalid data.')
+        return super().form_invalid(form)
+
+
+class GoalCreateView(PermissionRequiredMixin, CreateView):
+    template_name = 'form.html'
+    form_class = GoalModelForm
+    success_url = reverse_lazy('goals')
+    permission_required = 'viewer.add_goal'
+
+
+class GoalUpdateView(PermissionRequiredMixin, UpdateView):
+    template_name = 'form.html'
+    model = Goal
+    form_class = GoalModelForm
+    success_url = reverse_lazy('goals')
+    permission_required = 'viewer.change_goal'
+
+
+class GoalDeleteView(PermissionRequiredMixin, DeleteView):
+    template_name = 'goal_confirm_delete.html'
+    model = Goal
+    success_url = reverse_lazy('goals')
+    permission_required = 'viewer.delete_goal'
