@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
-from django.db import models
-from django.db.models import Model, CharField, ForeignKey, DO_NOTHING, ImageField, SET_NULL, TextField, DateField, TextChoices, DateTimeField, BooleanField
+from django.db.models import (Model, CharField, ForeignKey, DO_NOTHING, ImageField, SET_NULL, TextField, DateField,
+                              TextChoices, DateTimeField, BooleanField)
 
 
 class Position(Model):
@@ -9,7 +9,6 @@ class Position(Model):
 
     #class Meta:
         #ordering = ['position_name']
-
 
     def __str__(self):
         return self.position_name
@@ -23,7 +22,7 @@ class Profile(Model):
     bio = TextField(null=True, blank=True)
 
     #class Meta:
-        #ordering = [last_name', 'first_name']
+        #ordering = ['last_name', 'first_name']
 
     def __str__(self):
         return f'{self.user.first_name} ({self.user.last_name})'
