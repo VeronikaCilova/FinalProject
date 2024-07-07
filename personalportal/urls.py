@@ -16,6 +16,8 @@ Including another URLconf
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
+
+from viewer import views
 from viewer.views import *
 
 from personalportal import settings
@@ -29,5 +31,8 @@ urlpatterns = [
     path('accounts/signup/', SignUpView.as_view(), name='signup'),
     path('accounts/password_change/', SubmittablePasswordChangeView.as_view(), name='password_change'),
     path('accounts/', include('django.contrib.auth.urls')),
+    path('accounts/profile/', MyProfileView.as_view(), name='profile_detail'),
     path('profile/<pk>/', ProfileView.as_view(), name='profile'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('send_kudos/', views.send_kudos, name='send_kudos'),
+    path('user_page/<pk>/', views.user_page, name='user_page')
+              ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
