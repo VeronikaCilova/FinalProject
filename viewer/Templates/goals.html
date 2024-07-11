@@ -5,7 +5,7 @@
 <ul>
     {% for goal in goals %}
         <li>
-            {{ goal.name }} : {{ goal.deadline|date:"j. n. Y" }} / {{ goal.priority|title }} / {{ goal.status|upper }}
+            <a href="{% url 'goal' goal.id %}">{{ goal.name }}</a>: {{ goal.deadline|date:"j. n. Y" }} / {{ goal.priority|title }} / {{ goal.status|upper }}
             {% if user.is_authenticated %}
                 {% if perms.viewer.change_goal %}
                     <a href="{% url 'goal_update' goal.id %}">✏️Update</a>

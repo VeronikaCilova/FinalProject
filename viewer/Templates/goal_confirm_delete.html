@@ -6,6 +6,7 @@
     <p>
         Are you sure you want to delete goal "{{ object.name }}" from your profile?
     </p>
-    <input type="submit" value="Submit" class="btn btn-danger">
+    <input type="submit" value="Delete" class="btn btn-danger">
+    <input type="button" value="Cancel" class="btn btn-primary" onclick="history.back()"/>
 </form>
 {% endblock %}

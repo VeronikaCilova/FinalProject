@@ -1,10 +1,12 @@
 from concurrent.futures._base import LOGGER
+from datetime import date
 
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.views import LoginView, PasswordChangeView
+from django.core.exceptions import ValidationError
 from django.db.transaction import atomic
-from django.forms import CharField, Textarea, ModelForm
+from django.forms import CharField, Textarea, ModelForm, DateField
 from django.shortcuts import render
 from django.views import View
 
@@ -49,9 +51,14 @@ class SignUpForm(UserCreationForm):
 
 class ProfileView(View):
     def get(self, request, pk):
-        if Profile.objects.filter(id=pk).exists():  # otestujeme, zda profil existuje
+        if Profile.objects.filter(id=pk).exists():
             result = Profile.objects.get(id=pk)
             return render(request, 'user_page.html', {'title': 'MyProfile', 'profile': result})
+
+    # TODO: vypsat chybovou hlášku
+        return render(request,
+                      'user_page.html',
+                      {'title': 'Profile', 'profile': Profile.objects.all()})
 
 
 class ProfileForm(ModelForm):
@@ -66,11 +73,22 @@ class SignUpView(CreateView):
     success_url = reverse_lazy('home')
 
 
+class FutureDateField(DateField):
+    def validate(self, value):
+        super().validate(value)
+        if value < date.today():
+            raise ValidationError('Only future dates allowed here.')
+
+    def clean(self, value):
+        result = super().clean(value)
+        return result
+
+
 class GoalView(View):
     def get(self, request, pk):
         if Goal.objects.filter(id=pk).exists():
             result = Goal.objects.get(id=pk)
-            return render(request, 'goal.html', {'title': result, 'goal': result})
+            return render(request, 'goal.html', {'title': 'MyGoal', 'goal': result})
 
         result = Goal.objects.all()
         return render(request,
@@ -84,11 +102,13 @@ class GoalsView(ListView):
     context_object_name = 'goals'
 
 
-class GoalModelForm(ModelForm):
-
+class GoalForm(ModelForm):
     class Meta:
         model = Goal
         fields = '__all__'
+        #exclude = ['profile']
+
+    deadline = FutureDateField()
 
     def clean_name(self):
         initial_data = super().clean()
@@ -106,35 +126,27 @@ class GoalModelForm(ModelForm):
         return result
 
 
-class GoalFormView(FormView):
+class GoalCreateView(PermissionRequiredMixin, CreateView):
     template_name = 'form.html'
-    form_class = GoalModelForm
-    success_url = reverse_lazy('goal_create')
-
-    def form_valid(self, form):
-        result = super().form_valid(form)
-        cleaned_data = form.cleaned_data
-        Goal.objects.create(name=cleaned_data['name'])
-        return result
+    form_class = GoalForm
+    success_url = reverse_lazy('goals')
+    permission_required = 'viewer.add_goal'
 
     def form_invalid(self, form):
         LOGGER.warning('User provided invalid data.')
-        return super().form_invalid(form)
-
-
-class GoalCreateView(PermissionRequiredMixin, CreateView):
-    template_name = 'form.html'
-    form_class = GoalModelForm
-    success_url = reverse_lazy('goals')
-    permission_required = 'viewer.add_goal'
+        return super().form_invalid()
 
 
 class GoalUpdateView(PermissionRequiredMixin, UpdateView):
     template_name = 'form.html'
     model = Goal
-    form_class = GoalModelForm
+    form_class = GoalForm
     success_url = reverse_lazy('goals')
     permission_required = 'viewer.change_goal'
+
+    def form_invalid(self, form):
+        LOGGER.warning('User provided invalid data.')
+        return super().form_invalid()
 
 
 class GoalDeleteView(PermissionRequiredMixin, DeleteView):

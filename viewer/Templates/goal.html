@@ -6,10 +6,10 @@
 </div>
     <p>Description: {{ goal.description }}</p>
     <p>Deadline: {{ goal.deadline|date:"j. n. Y" }}</p>
-    <p>Priority: {{ goal.priority }}</p>
-    <p>Status: {{ goal.status }}</p>
+    <p>Priority: {{ goal.priority|title }}</p>
+    <p>Status: {{ goal.status|upper }}</p>
 
-<!--<a href="{% url 'goal_update' goal.id %}">Update</a>-->
-<!--<a href="{% url 'goal_delete' goal.id %}">Delete</a>-->
+<a href="{% url 'goal_update' goal.id %}">✏️Update</a>
+<a href="{% url 'goal_delete' goal.id %}">❌Delete</a>
 
 {% endblock %}
