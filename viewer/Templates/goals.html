@@ -2,6 +2,7 @@
 
 {% block content %}
 <h1>Personal goals overview</h1>
+{% if user.is_authenticated %}
 <ul>
     {% for goal in goals %}
         <li>
@@ -20,7 +21,6 @@
     {% endfor %}
 </ul>
 
-{% if user.is_authenticated %}
     {% if perms.viewer.add_goal %}
         <a href="{% url 'goal_create' %}">✖️Create</a>
     {% endif %}

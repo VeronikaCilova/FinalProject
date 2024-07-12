@@ -2,7 +2,7 @@ from concurrent.futures._base import LOGGER
 from datetime import date
 
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.core.exceptions import ValidationError
 from django.db.transaction import atomic
@@ -49,7 +49,7 @@ class SignUpForm(UserCreationForm):
         return result
 
 
-class ProfileView(View):
+class ProfileView(LoginRequiredMixin, View):
     def get(self, request, pk):
         if Profile.objects.filter(id=pk).exists():
             result = Profile.objects.get(id=pk)
@@ -84,7 +84,7 @@ class FutureDateField(DateField):
         return result
 
 
-class GoalView(View):
+class GoalView(LoginRequiredMixin, View):
     def get(self, request, pk):
         if Goal.objects.filter(id=pk).exists():
             result = Goal.objects.get(id=pk)
@@ -96,7 +96,7 @@ class GoalView(View):
                       {'title': 'Goals', 'goals': result})
 
 
-class GoalsView(ListView):
+class GoalsView(LoginRequiredMixin, ListView):
     template_name = 'goals.html'
     model = Goal
     context_object_name = 'goals'
@@ -126,7 +126,7 @@ class GoalForm(ModelForm):
         return result
 
 
-class GoalCreateView(PermissionRequiredMixin, CreateView):
+class GoalCreateView(LoginRequiredMixin, CreateView):
     template_name = 'form.html'
     form_class = GoalForm
     success_url = reverse_lazy('goals')
@@ -137,7 +137,7 @@ class GoalCreateView(PermissionRequiredMixin, CreateView):
         return super().form_invalid()
 
 
-class GoalUpdateView(PermissionRequiredMixin, UpdateView):
+class GoalUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'form.html'
     model = Goal
     form_class = GoalForm
@@ -149,7 +149,7 @@ class GoalUpdateView(PermissionRequiredMixin, UpdateView):
         return super().form_invalid()
 
 
-class GoalDeleteView(PermissionRequiredMixin, DeleteView):
+class GoalDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'goal_confirm_delete.html'
     model = Goal
     success_url = reverse_lazy('goals')

@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+{% if user.is_authenticated %}
 <div class="goal-details">
     <h1>Goal: {{ goal.name }}</h1>
 </div>
@@ -12,4 +13,5 @@
 <a href="{% url 'goal_update' goal.id %}">✏️Update</a>
 <a href="{% url 'goal_delete' goal.id %}">❌Delete</a>
 
+{% endif %}
 {% endblock %}
