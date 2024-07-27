@@ -14,4 +14,17 @@
     <p>Summary: {{ profile.bio }}</p>
 </div>
 
+
+<div class="kudos-section">
+    <h2>Kudos</h2>
+
+        {% for feedback in feedbacks %}
+            <div>
+                <strong>{{ feedback.creation_date }}</strong>: {{ feedback.description }}
+                <em>by {{ feedback.evaluator.user.username }}</em>
+            </div>
+        {% endfor %}
+    </ul>
+</div>
+
 {% endblock %}
