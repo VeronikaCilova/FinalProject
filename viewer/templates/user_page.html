@@ -3,16 +3,28 @@
 {% block content %}
 
 <div class="profile-details">
-    <h1>{{ profile.user.first_name}} {{ profile.user.last_name }}</h1>
+    <h1>{{ profile.user.first_name }} {{ profile.user.last_name }}</h1>
     <div class="profile-images">
         <span class="profile-image">
             <img src="{{ profile.picture.url }}" alt="Profile Picture" width="150px">
         </span>
     </div>
     <p>Position: {{ profile.position }}</p>
-<!--    TODO: odstranit závorku z příjmení teamleadera-->
+    <!-- TODO: odstranit závorku z příjmení teamleadera -->
     <p>Team Leader: {{ profile.supervisor }}</p>
     <p>Summary: {{ profile.bio }}</p>
+</div>
+
+<div class="kudos-section">
+    <h2>Kudos</h2>
+
+        {% for feedback in feedbacks %}
+            <div>
+                <strong>{{ feedback.creation_date }}</strong>: {{ feedback.description }}
+                <em>by {{ feedback.evaluator.user.username }}</em>
+            </div>
+        {% endfor %}
+    </ul>
 </div>
 
 {% endblock %}
