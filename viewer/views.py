@@ -6,7 +6,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMix
 from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.core.exceptions import ValidationError
 from django.db.transaction import atomic
-from django.forms import CharField, Textarea, forms, ModelForm, ModelChoiceField
+from django.forms import CharField, Textarea, forms, ModelForm, ModelChoiceField, DateField
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.views.generic import DetailView

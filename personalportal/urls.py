@@ -32,8 +32,7 @@ urlpatterns = [
     path('accounts/profile/', MyProfileView.as_view(), name='profile_detail'),
     path('profile/<pk>/', ProfileView.as_view(), name='profile'),
     path('send_kudos/', send_kudos, name='send_kudos'),
-    path('user_page/<pk>/', user_page, name='user_page')
-              ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('user_page/<pk>/', user_page, name='user_page'),
 
     path('goals/', GoalsView.as_view(), name='goals'),
     path('goal/create/', GoalCreateView.as_view(), name='goal_create'),
