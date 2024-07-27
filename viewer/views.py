@@ -22,6 +22,19 @@ from .models import Feedback, Profile
 from viewer.models import Profile, Goal
 import re
 
+from django.shortcuts import render, redirect
+from django.contrib import messages
+
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django import forms
+from .models import Todo
+
+
+
+
+
 
 def home(request):
     return render(request, 'home.html', {'title': 'Welcome to Personal Portal'})
@@ -74,7 +87,7 @@ class MyProfileView(View):
             result = Profile.objects.get(user=user)
             return render(request, 'user_page.html', {'title': 'MyProfile', 'profile': result})
 
-        # TODO: home.html
+
         return render(request, 'home.html')
 
 
@@ -109,6 +122,7 @@ def send_kudos(request):
         form = FeedbackForm()
 
     return render(request, 'send_kudos.html', {'form': form})
+
 
 @login_required
 def user_page(request, pk):
@@ -207,3 +221,82 @@ class GoalDeleteView(LoginRequiredMixin, DeleteView):
     model = Goal
     success_url = reverse_lazy('goals')
     permission_required = 'viewer.delete_goal'
+
+
+#
+#
+# class TODOLISTForm(ModelForm):
+#     class Meta:
+#         model = Task
+#         fields = ['title', 'description', 'due_date', 'to_do_list', 'completed']
+#
+#
+# class TaskListView(ListView):
+#     model = Task
+#     template_name = 'task_list.html'
+#     context_object_name = 'tasks'
+#     ordering = ['due_date']
+#
+#
+# class TaskDetailView(DetailView):
+#     model = Task
+#     template_name = 'task_detail.html'
+#
+#
+# class TaskCreateView(CreateView):
+#     model = Task
+#     form_class = TODOLISTForm
+#     template_name = 'task_form.html'
+#     success_url = '/tasks/'
+#
+#     def form_valid(self, form):
+#         form.instance.creator = self.request.user.profile
+#         return super().form_valid(form)
+#
+#
+# class TaskUpdateView(UpdateView):
+#     model = Task
+#     form_class = TODOLISTForm
+#     template_name = 'task_form.html'
+#     success_url = '/tasks/'
+#
+#
+# class TaskDeleteView(DeleteView):
+#     model = Task
+#     template_name = 'task_confirm_delete.html'
+#     success_url = '/tasks/'
+
+
+
+
+
+class TodoForm(forms.ModelForm):
+    class Meta:
+        model = Todo
+        fields = "__all__"
+def index(request):
+
+    item_list = Todo.objects.order_by("-date")
+    if request.method == "POST":
+        form = TodoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('todo')
+    form = TodoForm()
+
+    page = {
+        "forms": form,
+        "list": item_list,
+        "title": "TODO LIST",
+    }
+    return render(request, 'index.html', page)
+
+
+#TODO přidat edit
+def remove(request, item_id):
+    item = Todo.objects.get(id=item_id)
+    item.delete()
+    messages.info(request, "item removed !!!")
+    return redirect('todo')
+
+

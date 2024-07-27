@@ -20,6 +20,9 @@ from viewer.views import *
 
 from personalportal import settings
 from viewer.views import ProfileView, home
+from viewer import views
+
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -39,5 +42,13 @@ urlpatterns = [
     path('goal/update/<pk>/', GoalUpdateView.as_view(), name='goal_update'),
     path('goal/delete/<pk>/', GoalDeleteView.as_view(), name='goal_delete'),
     path('goal/<pk>/', GoalView.as_view(), name='goal'),
+    # path('tasks/', TaskListView.as_view(), name='task-list'),
+    # path('task/<pk>/', TaskDetailView.as_view(), name='task-detail'),
+    # path('task/create/', TaskCreateView.as_view(), name='task-create'),
+    # path('task/<pk>/edit/', TaskUpdateView.as_view(), name='task-update'),
+    # path('task/<pk>/delete/', TaskDeleteView.as_view(), name='task-delete'),
+
+    path('todo/', views.index, name="todo"),
+    path('del/<str:item_id>', views.remove, name="del"),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

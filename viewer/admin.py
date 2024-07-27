@@ -6,3 +6,4 @@ from viewer.models import Profile, Position, Goal
 admin.site.register(Profile)
 admin.site.register(Position)
 admin.site.register(Goal)
+# admin.site.register(Task)
