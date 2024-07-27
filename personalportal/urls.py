@@ -40,4 +40,10 @@ urlpatterns = [
     path('goal/delete/<pk>/', GoalDeleteView.as_view(), name='goal_delete'),
     path('goal/<pk>/', GoalView.as_view(), name='goal'),
 
+    path('reviews/', ReviewsView.as_view(), name='reviews'),
+    path('review/create/', ReviewCreateView.as_view(), name='review_create'),
+    path('review/update/<pk>/', ReviewUpdateView.as_view(), name='review_update'),
+    path('review/delete/<pk>/', ReviewDeleteView.as_view(), name='review_delete'),
+    path('review/<pk>/', ReviewView.as_view(), name='review'),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

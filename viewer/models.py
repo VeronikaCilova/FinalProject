@@ -57,7 +57,7 @@ class Goal(Model):
 
 class Review(Model):
     creation_date = DateTimeField(auto_now_add=True)
-    description = CharField(max_length=500, null=True, blank=True)
+    description = TextField(null=True, blank=True)
     evaluator = ForeignKey(Profile, related_name='evaluations', on_delete=DO_NOTHING)
     subject_of_review = ForeignKey(Profile, related_name='reviews', on_delete=DO_NOTHING)
     goal = CharField(max_length=500, null=True, blank=True)

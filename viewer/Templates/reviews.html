@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Performance reviews summary</h1>
+{% if user.is_authenticated %}
+<ul>
+    {% for review in reviews %}
+        <li>
+            <a href="{% url 'review' review.id %}">{{ review.description }}</a>: {{ review.creation_date|date:"j. n. Y" }} / {{ review.evaluator|title }}
+            {% if user.is_authenticated %}
+                {% if perms.viewer.change_review %}
+                    <a href="{% url 'review_update' review.id %}">✏️Update</a>
+                {% endif %}
+                {% if perms.viewer.delete_review %}
+                    <a href="{% url 'review_delete' review.id %}">❌Delete</a>
+                {% endif %}
+            {% endif %}
+        </li>
+    {% empty %}
+        <p>List of reviews is empty.</p>
+    {% endfor %}
+</ul>
+
+    {% if perms.viewer.add_review %}
+        <a href="{% url 'review_create' %}">➕Create</a>
+    {% endif %}
+{% endif %}
+{% endblock %}

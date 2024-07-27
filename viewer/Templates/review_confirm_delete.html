@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    <p>
+        Are you sure you want to delete review "{{ object.name }}" from your profile?
+    </p>
+    <input type="submit" value="Delete" class="btn btn-danger">
+    <input type="button" value="Cancel" class="btn btn-primary" onclick="history.back()"/>
+</form>
+{% endblock %}

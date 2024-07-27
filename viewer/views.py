@@ -15,7 +15,7 @@ from django.views.generic import DetailView
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, FormView, UpdateView, DeleteView
 
-from viewer.models import Profile, Feedback, Position
+from viewer.models import Profile, Feedback, Position, Review
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Feedback, Profile
@@ -207,3 +207,72 @@ class GoalDeleteView(LoginRequiredMixin, DeleteView):
     model = Goal
     success_url = reverse_lazy('goals')
     permission_required = 'viewer.delete_goal'
+
+
+class ReviewView(LoginRequiredMixin, View):
+    def get(self, request, pk):
+        if Review.objects.filter(id=pk).exists():
+            result = Review.objects.get(id=pk)
+            return render(request, 'review.html', {'title': 'MyReview', 'review': result})
+
+        result = Review.objects.all()
+        return render(request,
+                      'reviews.html',
+                      {'title': 'Reviews', 'reviews': result})
+
+
+class ReviewsView(LoginRequiredMixin, ListView):
+    template_name = 'reviews.html'
+    model = Review
+    context_object_name = 'reviews'
+
+
+class ReviewForm(ModelForm):
+    class Meta:
+        model = Review
+        fields = '__all__'
+
+    def clean_name(self):
+        initial_data = super().clean()
+        initial = initial_data['name'].strip()
+        return initial.capitalize()
+
+    def clean_description(self):
+        # Force each sentence of the description to be capitalized.
+        initial = self.cleaned_data['description']
+        sentences = re.sub(r'\s*\.\s*', '.', initial).split('.')
+        return '. '.join(sentence.capitalize() for sentence in sentences)
+
+    def clean(self):
+        result = super().clean()
+        return result
+
+
+class ReviewCreateView(LoginRequiredMixin, CreateView):
+    template_name = 'form.html'
+    form_class = ReviewForm
+    success_url = reverse_lazy('reviews')
+    permission_required = 'viewer.add_review'
+
+    def form_invalid(self, form):
+        LOGGER.warning('User provided invalid data.')
+        return super().form_invalid()
+
+
+class ReviewUpdateView(LoginRequiredMixin, UpdateView):
+    template_name = 'form.html'
+    model = Review
+    form_class = ReviewForm
+    success_url = reverse_lazy('reviews')
+    permission_required = 'viewer.change_review'
+
+    def form_invalid(self, form):
+        LOGGER.warning('User provided invalid data.')
+        return super().form_invalid()
+
+
+class ReviewDeleteView(LoginRequiredMixin, DeleteView):
+    template_name = 'review_confirm_delete.html'
+    model = Review
+    success_url = reverse_lazy('reviews')
+    permission_required = 'viewer.delete_review'

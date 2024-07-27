@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<div class="review-details">
+    <h1>Review: {{ review.creation_date|date:"j. n. Y" }}</h1>
+</div>
+    <p>Description: {{ review.description }}</p>
+    <p>Evaluator: {{ review.evaluator }}</p>
+    <p>Individual: {{ review.subject_of_review }}</p>
+    <p>Goal: {{ review.goal }}</p>
+    <p>Training: {{ review.training }}</p>
+
+<a href="{% url 'review_update' review.id %}">✏️Update</a>
+<a href="{% url 'review_delete' review.id %}">❌Delete</a>
+
+{% endif %}
+{% endblock %}
