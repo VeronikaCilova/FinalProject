@@ -16,8 +16,6 @@ Including another URLconf
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
-
-from viewer import views
 from viewer.views import *
 
 from personalportal import settings
@@ -33,6 +31,14 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/profile/', MyProfileView.as_view(), name='profile_detail'),
     path('profile/<pk>/', ProfileView.as_view(), name='profile'),
-    path('send_kudos/', views.send_kudos, name='send_kudos'),
-    path('user_page/<pk>/', views.user_page, name='user_page')
+    path('send_kudos/', send_kudos, name='send_kudos'),
+    path('user_page/<pk>/', user_page, name='user_page')
               ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+    path('goals/', GoalsView.as_view(), name='goals'),
+    path('goal/create/', GoalCreateView.as_view(), name='goal_create'),
+    path('goal/update/<pk>/', GoalUpdateView.as_view(), name='goal_update'),
+    path('goal/delete/<pk>/', GoalDeleteView.as_view(), name='goal_delete'),
+    path('goal/<pk>/', GoalView.as_view(), name='goal'),
+
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

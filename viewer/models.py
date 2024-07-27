@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.db.models import (Model, CharField, ForeignKey, DO_NOTHING, ImageField, SET_NULL, TextField, DateField,
-                              TextChoices, DateTimeField, BooleanField, OneToOneField)
+                              TextChoices, DateTimeField, BooleanField, CASCADE, OneToOneField)
 
 
 class Position(Model):
@@ -41,6 +41,7 @@ class Status(TextChoices):
 
 
 class Goal(Model):
+    profile = ForeignKey(Profile, on_delete=CASCADE)
     name = CharField(max_length=32)
     description = TextField(null=True, blank=True)
     deadline = DateField(null=True, blank=True)
