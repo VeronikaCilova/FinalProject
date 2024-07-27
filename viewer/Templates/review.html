@@ -3,11 +3,11 @@
 {% block content %}
 {% if user.is_authenticated %}
 <div class="review-details">
-    <h1>Review: {{ review.creation_date|date:"j. n. Y" }}</h1>
+    <h2>Review: {{ review.creation_date|date:"j. n. Y" }}</h2>
 </div>
     <p>Description: {{ review.description }}</p>
     <p>Evaluator: {{ review.evaluator }}</p>
-    <p>Individual: {{ review.subject_of_review }}</p>
+    <p>Assessed: {{ review.subject_of_review }}</p>
     <p>Goal: {{ review.goal }}</p>
     <p>Training: {{ review.training }}</p>
 
