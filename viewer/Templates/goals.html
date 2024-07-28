@@ -21,6 +21,28 @@
     {% endfor %}
 </ul>
 
+{% for subordinate in subordinates %}
+<h2> {{ subordinate }} </h2>
+<img src="{{ subordinate.picture.url }}" alt="Profile Picture" width="40px">
+    <ul>
+        {% for goal in subordinate.get_all_goals %}
+            <li>
+                <a href="{% url 'goal' goal.id %}">{{ goal.name }}</a>: {{ goal.deadline|date:"j. n. Y" }} / {{ goal.priority|title }} / {{ goal.status|upper }}
+                {% if user.is_authenticated %}
+                    {% if perms.viewer.change_goal %}
+                        <a href="{% url 'goal_update' goal.id %}">✏️Update</a>
+                    {% endif %}
+                    {% if perms.viewer.delete_goal %}
+                        <a href="{% url 'goal_delete' goal.id %}">❌Delete</a>
+                    {% endif %}
+                {% endif %}
+            </li>
+        {% empty %}
+            <p>List of goals is empty.</p>
+        {% endfor %}
+    </ul>
+{% endfor %}
+
     {% if perms.viewer.add_goal %}
         <a href="{% url 'goal_create' %}">➕Create</a>
     {% endif %}

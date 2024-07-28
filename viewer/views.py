@@ -1,5 +1,7 @@
 from concurrent.futures._base import LOGGER
 from datetime import date
+from itertools import chain
+from operator import attrgetter
 
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
@@ -112,7 +114,8 @@ def send_kudos(request):
 
 @login_required
 def user_page(request, pk):
-    profile = Profile.objects.get(pk=pk)
+    user = request.user
+    profile = Profile.objects.get(user=user)
     feedbacks = Feedback.objects.filter(subject_of_review=profile).order_by('-creation_date')
     return render(request, 'user_page.html', {'profile': profile, 'feedbacks': feedbacks})
 
@@ -149,10 +152,13 @@ class GoalView(LoginRequiredMixin, View):
                       {'title': 'Goals', 'goals': result})
 
 
-class GoalsView(LoginRequiredMixin, ListView):
-    template_name = 'goals.html'
-    model = Goal
-    context_object_name = 'goals'
+class GoalsView(LoginRequiredMixin, View):
+    def get(self, request):
+        profile = Profile.objects.get(user=self.request.user)
+        mygoals = Goal.objects.filter(profile=profile).order_by('-deadline')
+        mysubordinate = profile.subordinate.all()
+        context = {'goals': mygoals, 'subordinates': mysubordinate}
+        return render(request, 'goals.html', context)
 
 
 class GoalForm(ModelForm):
@@ -179,7 +185,7 @@ class GoalForm(ModelForm):
         return result
 
 
-class GoalCreateView(LoginRequiredMixin, CreateView):
+class GoalCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     template_name = 'form.html'
     form_class = GoalForm
     success_url = reverse_lazy('goals')
@@ -190,7 +196,7 @@ class GoalCreateView(LoginRequiredMixin, CreateView):
         return super().form_invalid()
 
 
-class GoalUpdateView(LoginRequiredMixin, UpdateView):
+class GoalUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     template_name = 'form.html'
     model = Goal
     form_class = GoalForm
@@ -202,7 +208,7 @@ class GoalUpdateView(LoginRequiredMixin, UpdateView):
         return super().form_invalid()
 
 
-class GoalDeleteView(LoginRequiredMixin, DeleteView):
+class GoalDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     template_name = 'goal_confirm_delete.html'
     model = Goal
     success_url = reverse_lazy('goals')
@@ -248,7 +254,7 @@ class ReviewForm(ModelForm):
         return result
 
 
-class ReviewCreateView(LoginRequiredMixin, CreateView):
+class ReviewCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     template_name = 'form.html'
     form_class = ReviewForm
     success_url = reverse_lazy('reviews')
@@ -259,7 +265,7 @@ class ReviewCreateView(LoginRequiredMixin, CreateView):
         return super().form_invalid()
 
 
-class ReviewUpdateView(LoginRequiredMixin, UpdateView):
+class ReviewUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     template_name = 'form.html'
     model = Review
     form_class = ReviewForm
@@ -271,7 +277,7 @@ class ReviewUpdateView(LoginRequiredMixin, UpdateView):
         return super().form_invalid()
 
 
-class ReviewDeleteView(LoginRequiredMixin, DeleteView):
+class ReviewDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     template_name = 'review_confirm_delete.html'
     model = Review
     success_url = reverse_lazy('reviews')
