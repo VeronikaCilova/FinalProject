@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Reviews Summary</h1>
+<h1>My Reviews Summary</h1>
 {% if user.is_authenticated %}
 <ul>
     {% for review in reviews %}
         <li>
-            <a href="{% url 'review' review.id %}">{{ review.description }}</a>: {{ review.creation_date|date:"j. n. Y" }} / {{ review.evaluator|title }}
+            <a href="{% url 'review' review.id %}"><strong>REVIEW</strong></a>: <b>{{ review.creation_date|date:"j. n. Y" }}</b> <i>by</i> {{ review.evaluator|title }}
             {% if user.is_authenticated %}
                 {% if perms.viewer.change_review %}
                     <a href="{% url 'review_update' review.id %}">✏️Update</a>
@@ -21,8 +21,31 @@
     {% endfor %}
 </ul>
 
+<p>
+{% for evaluation in evaluations %}
+    <h2> {{ evaluation }} <img src="{{ evaluation.picture.url }}" alt="Profile Picture" width="40px"></h2>
+    <ul>
+        {% for review in reviews.get_all_reviews %}
+            <li>
+                <a href="{% url 'review' review.id %}"><strong>REVIEW</strong></a>: <b>{{ review.creation_date|date:"j. n. Y" }}</b> <i>by</i> {{ review.evaluator|title }}
+                {% if user.is_authenticated %}
+                    {% if perms.viewer.change_review %}
+                        <a href="{% url 'review_update' review.id %}">✏️Update</a>
+                    {% endif %}
+                    {% if perms.viewer.delete_review %}
+                        <a href="{% url 'review_delete' review.id %}">❌Delete</a>
+                    {% endif %}
+                {% endif %}
+            </li>
+        {% empty %}
+            <p>List of reviews is empty.</p>
+        {% endfor %}
+    </ul>
+{% endfor %}
+</p>
+
     {% if perms.viewer.add_review %}
-        <a href="{% url 'review_create' %}">➕Create</a>
+        <a href="{% url 'review_create' %}">➕Create Review</a>
     {% endif %}
 {% endif %}
 {% endblock %}

@@ -21,9 +21,9 @@
     {% endfor %}
 </ul>
 
+<p>
 {% for subordinate in subordinates %}
-<h2> {{ subordinate }} </h2>
-<img src="{{ subordinate.picture.url }}" alt="Profile Picture" width="40px">
+    <h2> {{ subordinate }} <img src="{{ subordinate.picture.url }}" alt="Profile Picture" width="40px"></h2>
     <ul>
         {% for goal in subordinate.get_all_goals %}
             <li>
@@ -42,9 +42,10 @@
         {% endfor %}
     </ul>
 {% endfor %}
+</p>
 
     {% if perms.viewer.add_goal %}
-        <a href="{% url 'goal_create' %}">➕Create</a>
+        <a href="{% url 'goal_create' %}">➕Create Goal</a>
     {% endif %}
 {% endif %}
 {% endblock %}

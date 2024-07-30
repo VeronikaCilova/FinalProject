@@ -72,9 +72,12 @@ class Review(Model):
     def __str__(self):
         return f"{self.subject_of_review} ({self.creation_date})"
 
+    def get_all_reviews(self):
+        return Review.objects.filter(subject_of_review=self)
+
 
 class Task(Model):
-    title=CharField(max_length=120)
+    title = CharField(max_length=120)
     description = TextField(null=True, blank=True)
     creation_date = DateTimeField(auto_now_add=True)
     due_date = DateTimeField(default=None, null=True, blank=True)

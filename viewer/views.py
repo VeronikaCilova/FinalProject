@@ -227,10 +227,13 @@ class ReviewView(LoginRequiredMixin, View):
                       {'title': 'Reviews', 'reviews': result})
 
 
-class ReviewsView(LoginRequiredMixin, ListView):
-    template_name = 'reviews.html'
-    model = Review
-    context_object_name = 'reviews'
+class ReviewsView(LoginRequiredMixin, View):
+    def get(self, request):
+        profile = Profile.objects.get(user=self.request.user)
+        myreviews = Review.objects.filter(subject_of_review=profile).order_by('-creation_date')
+        evaluation = profile.subordinate.all()
+        context = {'reviews': myreviews, 'evaluations': evaluation}
+        return render(request, 'reviews.html', context)
 
 
 class ReviewForm(ModelForm):
