@@ -30,6 +30,9 @@ class Profile(Model):
     def get_all_goals(self):
         return Goal.objects.filter(profile=self)
 
+    def get_all_reviews(self):
+        return Review.objects.filter(subject_of_review=self)
+
     def get_picture(self):
         return self.picture
 
@@ -71,9 +74,6 @@ class Review(Model):
 
     def __str__(self):
         return f"{self.subject_of_review} ({self.creation_date})"
-
-    def get_all_reviews(self):
-        return Review.objects.filter(subject_of_review=self)
 
 
 class Task(Model):
