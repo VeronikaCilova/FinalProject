@@ -1,0 +1,60 @@
+<title>Goal Details | Personal Portal</title>
+
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Goal Details</h2>
+{% if user.is_authenticated %}
+<form method="post">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                {{ form.name.errors }}
+                <label for="{{ form.name.id_for_label }}"><strong>Goal Name:</strong></label>
+                {{ form.name }}
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                {{ form.profile.errors }}
+                <label for="{{ form.profile.id_for_label }}"><strong>Person:</strong></label>
+                {{ form.profile }}
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        {{ form.description.errors }}
+        <label for="{{ form.description.id_for_label }}"><strong>Description:</strong></label>
+        {{ form.description }}
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                {{ form.deadline.errors }}
+                <label for="{{ form.dealine.id_for_label }}"><strong>Deadline:</strong></label>
+                {{ form.deadline }}
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                {{ form.priority.errors }}
+                <label for="{{ form.priority.id_for_label }}"><strong>Priority:</strong></label>
+                {{ form.priority }}
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                {{ form.status.errors }}
+                <label for="{{ form.status.id_for_label }}"><strong>Status:</strong></label>
+                {{ form.status }}
+            </div>
+        </div>
+    </div>
+    <input type="submit" value="Submit" class="btn btn-success">
+    <input type="button" value="Cancel" class="btn btn-primary" onclick="history.back()"/>
+</form>
+
+{% endif %}
+{% endblock %}

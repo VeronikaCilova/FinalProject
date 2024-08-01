@@ -1,26 +1,28 @@
+<title>My Profile | Personal Portal</title>
+
 {% extends "base.html" %}
 
 {% block content %}
 
 <div class="profile-details">
-    <h1>{{ profile.user.first_name}} {{ profile.user.last_name }}</h1>
+    <h1 style="color: blueviolet">{{ profile.user.first_name}} {{ profile.user.last_name }}</h1>
     <div class="profile-images">
         <span class="profile-image">
             <img src="{{ profile.picture.url }}" alt="Profile Picture" width="150px">
         </span>
     </div>
-    <p>Position: {{ profile.position }}</p>
-    <p>Team Leader: {{ profile.supervisor }}</p>
-    <p>Summary: {{ profile.bio }}</p>
+    <p><strong>Position:</strong> {{ profile.position|upper }}</p>
+    <p><strong>Team Leader:</strong> {{ profile.supervisor }}</p>
+    <p><strong>Summary:</strong> {{ profile.bio }}</p>
 </div>
 
 
 <div class="kudos-section">
-    <h2>Kudos</h2>
+    <h2 style="color: blueviolet">Kudos</h2>
 
         {% for feedback in feedbacks %}
             <div>
-                <strong>{{ feedback.creation_date }}</strong>: {{ feedback.description }}
+                <strong>Feedback from {{ feedback.creation_date|date:"j. n. Y" }}</strong>: {{ feedback.description }}
                 <em>by {{ feedback.evaluator.user.username }}</em>
             </div>
         {% endfor %}

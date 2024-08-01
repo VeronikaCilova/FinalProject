@@ -5,11 +5,11 @@
 <div class="review-details">
     <h2>Review: {{ review.creation_date|date:"j. n. Y" }}</h2>
 </div>
-    <p>Description: {{ review.description }}</p>
-    <p>Evaluator: {{ review.evaluator }}</p>
-    <p>Assessed: {{ review.subject_of_review }}</p>
-    <p>Goal: {{ review.goal }}</p>
-    <p>Training: {{ review.training }}</p>
+    <p><strong>Description:</strong> {{ review.description }}</p>
+    <p><strong>Evaluator:</strong> {{ review.evaluator }}</p>
+    <p><strong>Reviewee:</strong> {{ review.subject_of_review }}</p>
+    <p><strong>Goal:</strong> {{ review.goal }}</p>
+    <p><strong>Training:</strong> {{ review.training }}</p>
 
 <a href="{% url 'review_update' review.id %}">✏️Update</a>
 <a href="{% url 'review_delete' review.id %}">❌Delete</a>

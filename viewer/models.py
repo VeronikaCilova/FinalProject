@@ -51,7 +51,7 @@ class Status(TextChoices):
 
 class Goal(Model):
     profile = ForeignKey(Profile, on_delete=CASCADE)
-    name = CharField(max_length=32)
+    name = CharField(max_length=160)
     description = TextField(null=True, blank=True)
     deadline = DateField(null=True, blank=True)
     priority = CharField(max_length=64, choices=Priority.choices, null=True, blank=True)

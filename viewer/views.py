@@ -71,7 +71,7 @@ class ProfileView(LoginRequiredMixin, View):
 
 class MyProfileView(View):
     def get(self, request):
-        user=request.user
+        user = request.user
         if Profile.objects.filter(user=user).exists():  # otestujeme, zda profil existuje
             result = Profile.objects.get(user=user)
             return render(request, 'user_page.html', {'title': 'MyProfile', 'profile': result})
@@ -169,6 +169,11 @@ class GoalForm(ModelForm):
 
     deadline = FutureDateField()
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'
+
     def clean_name(self):
         initial_data = super().clean()
         initial = initial_data['name'].strip()
@@ -186,7 +191,7 @@ class GoalForm(ModelForm):
 
 
 class GoalCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
-    template_name = 'form.html'
+    template_name = 'form_goal.html'
     form_class = GoalForm
     success_url = reverse_lazy('goals')
     permission_required = 'viewer.add_goal'
@@ -197,7 +202,7 @@ class GoalCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
 
 
 class GoalUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
-    template_name = 'form.html'
+    template_name = 'form_goal.html'
     model = Goal
     form_class = GoalForm
     success_url = reverse_lazy('goals')
@@ -241,6 +246,11 @@ class ReviewForm(ModelForm):
         model = Review
         fields = '__all__'
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'
+
     def clean_name(self):
         initial_data = super().clean()
         initial = initial_data['name'].strip()
@@ -258,7 +268,7 @@ class ReviewForm(ModelForm):
 
 
 class ReviewCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
-    template_name = 'form.html'
+    template_name = 'form_review.html'
     form_class = ReviewForm
     success_url = reverse_lazy('reviews')
     permission_required = 'viewer.add_review'
@@ -269,7 +279,7 @@ class ReviewCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
 
 
 class ReviewUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
-    template_name = 'form.html'
+    template_name = 'form_review.html'
     model = Review
     form_class = ReviewForm
     success_url = reverse_lazy('reviews')

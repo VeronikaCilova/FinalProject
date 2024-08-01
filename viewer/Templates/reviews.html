@@ -1,3 +1,5 @@
+<title>Reviews | Personal Portal</title>
+
 {% extends "base.html" %}
 
 {% block content %}
@@ -23,7 +25,9 @@
 
 <p>
 {% for evaluation in evaluations %}
-    <h2> {{ evaluation }} <img src="{{ evaluation.picture.url }}" alt="Profile Picture" width="40px"></h2>
+    <p>
+        <h2> {{ evaluation }} <img src="{{ evaluation.picture.url }}" alt="Profile Picture" width="40px"> </h2>
+    </p>
     <ul>
         {% for review in evaluation.get_all_reviews %}
             <li>

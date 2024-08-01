@@ -1,0 +1,49 @@
+<title>Review Details | Personal Portal</title>
+
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Review Details</h2>
+{% if user.is_authenticated %}
+<form method="post">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                {{ form.evaluator.errors }}
+                <label for="{{ form.evaluator.id_for_label }}"><strong>Evaluator:</strong></label>
+                {{ form.evaluator }}
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                {{ form.subject_of_review.errors }}
+                <label for="{{ form.subject_of_review.id_for_label }}"><strong>Reviewee:</strong></label>
+                {{ form.subject_of_review }}
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                {{ form.goal.errors }}
+                <label for="{{ form.goal.id_for_label }}"><strong>Goal:</strong></label>
+                {{ form.goal }}
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        {{ form.description.errors }}
+        <label for="{{ form.description.id_for_label }}"><strong>Description:</strong></label>
+        {{ form.description }}
+    </div>
+    <div class="form-group">
+        {{ form.training.errors }}
+        <label for="{{ form.training.id_for_label }}"><strong>Training:</strong></label>
+        {{ form.training }}
+    </div>
+    <input type="submit" value="Submit" class="btn btn-success">
+    <input type="button" value="Cancel" class="btn btn-primary" onclick="history.back()"/>
+</form>
+
+{% endif %}
+{% endblock %}

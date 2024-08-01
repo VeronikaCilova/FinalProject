@@ -1,3 +1,5 @@
+<title>Goals | Personal Portal</title>
+
 {% extends "base.html" %}
 
 {% block content %}
@@ -6,7 +8,7 @@
 <ul>
     {% for goal in goals %}
         <li>
-            <a href="{% url 'goal' goal.id %}">{{ goal.name }}</a>: {{ goal.deadline|date:"j. n. Y" }} / {{ goal.priority|title }} / {{ goal.status|upper }}
+            <a href="{% url 'goal' goal.id %}"><strong>{{ goal.name }}</strong></a>: {{ goal.deadline|date:"j. n. Y" }} / {{ goal.priority|title }} / {{ goal.status|upper }}
             {% if user.is_authenticated %}
                 {% if perms.viewer.change_goal %}
                     <a href="{% url 'goal_update' goal.id %}">✏️Update</a>
@@ -27,7 +29,7 @@
     <ul>
         {% for goal in subordinate.get_all_goals %}
             <li>
-                <a href="{% url 'goal' goal.id %}">{{ goal.name }}</a>: {{ goal.deadline|date:"j. n. Y" }} / {{ goal.priority|title }} / {{ goal.status|upper }}
+                <a href="{% url 'goal' goal.id %}"><strong>{{ goal.name }}</strong></a>: {{ goal.deadline|date:"j. n. Y" }} / {{ goal.priority|title }} / {{ goal.status|upper }}
                 {% if user.is_authenticated %}
                     {% if perms.viewer.change_goal %}
                         <a href="{% url 'goal_update' goal.id %}">✏️Update</a>
