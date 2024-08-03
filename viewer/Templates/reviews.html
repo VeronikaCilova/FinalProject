@@ -3,12 +3,54 @@
 {% extends "base.html" %}
 
 {% block content %}
+
+<style>
+#tableview {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#tableview td, #tableview th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#tableview tr:nth-child(even){background-color: #f2f2f2;}
+
+#tableview tr:hover {background-color: #ddd;}
+
+#tableview th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #04AA6D;
+  color: white;
+}
+</style>
+
 <h1>My Reviews Summary</h1>
 {% if user.is_authenticated %}
-<ul>
-    {% for review in reviews %}
-        <li>
-            <a href="{% url 'review' review.id %}"><strong>REVIEW</strong></a>: <b>{{ review.creation_date|date:"j. n. Y" }}</b> <i>by</i> {{ review.evaluator|title }}
+<p>
+    {% if perms.viewer.add_review %}
+        <a href="{% url 'review_create' %}">➕Create Review</a>
+    {% endif %}
+</p>
+<table id="tableview">
+    <colgroup>
+        <col width="500">
+    <colgroup span="3" width="100">
+    <tr>
+        <th>Review</th>
+        <th>Dated</th>
+        <th>Created by</th>
+        <th>Revisions</th>
+    </tr>
+        {% for review in reviews %}
+    <tr>
+        <td>{{ review.description }}</td>
+        <td><a href="{% url 'review' review.id %}"><strong>{{ review.creation_date|date:"j. n. Y" }}</strong></a></td>
+        <td>{{ review.evaluator|title }}</td>
+        <td>
             {% if user.is_authenticated %}
                 {% if perms.viewer.change_review %}
                     <a href="{% url 'review_update' review.id %}">✏️Update</a>
@@ -17,39 +59,50 @@
                     <a href="{% url 'review_delete' review.id %}">❌Delete</a>
                 {% endif %}
             {% endif %}
-        </li>
+        </td>
+    </tr>
     {% empty %}
-        <p>List of reviews is empty.</p>
+        <p>List of goals is empty.</p>
     {% endfor %}
-</ul>
+</table>
 
 <p>
 {% for evaluation in evaluations %}
     <p>
         <h2> {{ evaluation }} <img src="{{ evaluation.picture.url }}" alt="Profile Picture" width="40px"> </h2>
     </p>
-    <ul>
+
+<table id="tableview">
+    <colgroup>
+        <col width="500">
+    <colgroup span="3" width="100">
+    <tr>
+        <th>Review</th>
+        <th>Dated</th>
+        <th>Created by</th>
+        <th>Revisions</th>
+    </tr>
         {% for review in evaluation.get_all_reviews %}
-            <li>
-                <a href="{% url 'review' review.id %}"><strong>REVIEW</strong></a>: <b>{{ review.creation_date|date:"j. n. Y" }}</b> <i>by</i> {{ review.evaluator|title }}
-                {% if user.is_authenticated %}
-                    {% if perms.viewer.change_review %}
-                        <a href="{% url 'review_update' review.id %}">✏️Update</a>
-                    {% endif %}
-                    {% if perms.viewer.delete_review %}
-                        <a href="{% url 'review_delete' review.id %}">❌Delete</a>
-                    {% endif %}
+    <tr>
+        <td>{{ review.description }}</td>
+        <td><a href="{% url 'review' review.id %}"><strong>{{ review.creation_date|date:"j. n. Y" }}</strong></a></td>
+        <td>{{ review.evaluator|title }}</td>
+        <td>
+            {% if user.is_authenticated %}
+                {% if perms.viewer.change_review %}
+                    <a href="{% url 'review_update' review.id %}">✏️Update</a>
                 {% endif %}
-            </li>
-        {% empty %}
-            <p>List of reviews is empty.</p>
-        {% endfor %}
-    </ul>
+                {% if perms.viewer.delete_review %}
+                    <a href="{% url 'review_delete' review.id %}">❌Delete</a>
+                {% endif %}
+            {% endif %}
+        </td>
+    </tr>
+    {% empty %}
+        <p>List of goals is empty.</p>
+    {% endfor %}
+</table>
 {% endfor %}
 </p>
-
-    {% if perms.viewer.add_review %}
-        <a href="{% url 'review_create' %}">➕Create Review</a>
-    {% endif %}
 {% endif %}
 {% endblock %}

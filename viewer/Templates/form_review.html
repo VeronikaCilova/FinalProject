@@ -12,8 +12,8 @@
         <div class="col">
             <div class="form-group">
                 {{ form.goal.errors }}
-                <label for="{{ form.goal.id_for_label }}"><strong>Goal:</strong></label>
-                <select name="subject_of_review" class="form-control" required id="id_subject_of_review">
+                <label for="id_goal"><strong>Goal:</strong></label>
+                <select name="goal" class="form-control" required id="id_goal">
                 <option value="" selected>---------</option>
                 {% for goal in mygoals %}
                 <option value="{{goal.id}}">{{goal.profile}} - {{goal.name}}</option>

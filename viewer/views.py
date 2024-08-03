@@ -34,7 +34,7 @@ from django.contrib import messages
 from django import forms
 from .models import Todo
 
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 import openai
 from django.conf import settings
@@ -265,17 +265,17 @@ class ReviewsView(LoginRequiredMixin, View):
 class ReviewForm(ModelForm):
     class Meta:
         model = Review
-        fields = '__all__'
+        fields = ['goal', 'description', 'training']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
 
-    def clean_name(self):
-        initial_data = super().clean()
-        initial = initial_data['name'].strip()
-        return initial.capitalize()
+    # def clean_name(self):
+    #     initial_data = super().clean()
+    #     initial = initial_data['name'].strip()
+    #     return initial.capitalize()
 
     def clean_description(self):
         # Force each sentence of the description to be capitalized.
@@ -291,8 +291,46 @@ class ReviewForm(ModelForm):
 class ReviewCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     template_name = 'form_review.html'
     form_class = ReviewForm
-    success_url = reverse_lazy('reviews')
+    success_url = 'reviews'
     permission_required = 'viewer.add_review'
+
+    def form_invalid(self, form):
+        LOGGER.warning('User provided invalid data.')
+        return super().form_invalid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        profile = Profile.objects.get(user=self.request.user)
+        if profile:
+            mysubordinate = profile.subordinate.all()
+            profile_goals = Goal.objects.filter(profile=profile)
+            mysubordinate_goals = Goal.objects.filter(profile__in=mysubordinate)
+        context["mysubordinate_goals"] = mysubordinate_goals
+        context["mygoals"] = profile_goals
+        return context
+
+    def form_valid(self, form):
+        user = self.request.user
+        evaluator = Profile.objects.get(user=user)
+        id_goal = int(form.cleaned_data['goal'])
+        goal = Goal.objects.get(id=id_goal)
+        subject_of_review = goal.profile
+        Review.objects.create(
+            evaluator=evaluator,
+            subject_of_review=subject_of_review,
+            goal=goal,
+            training=form.cleaned_data['training'],
+            description=form.cleaned_data['description']
+        )
+        return HttpResponseRedirect('/reviews')
+
+
+class ReviewUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    template_name = 'form_review.html'
+    model = Review
+    form_class = ReviewForm
+    success_url = reverse_lazy('reviews')
+    permission_required = 'viewer.change_review'
 
     def form_invalid(self, form):
         LOGGER.warning('User provided invalid data.')
@@ -308,18 +346,6 @@ class ReviewCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
         context["mysubordinate_goals"] = mysubordinate_goals
         context["mygoals"] = profile_goals
         return context
-
-
-class ReviewUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
-    template_name = 'form_review.html'
-    model = Review
-    form_class = ReviewForm
-    success_url = reverse_lazy('reviews')
-    permission_required = 'viewer.change_review'
-
-    def form_invalid(self, form):
-        LOGGER.warning('User provided invalid data.')
-        return super().form_invalid()
 
 
 class ReviewDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
