@@ -44,7 +44,7 @@
     <div>
         <h1>Welcome to Personal Portal application</h1>
         {% if user.is_authenticated %}
-            <p>Hello, {{ user.username }}!</p>
+            <p>Hello, {{ user.first_name }}!</p>
             <p><a href="{% url 'logout' %}" class="button">Logout</a></p>
         {% else %}
             <h3>Hello, would you like to enjoy more content? Please sign up or sign in below:</h3>

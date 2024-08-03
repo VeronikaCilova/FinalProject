@@ -1,30 +1,84 @@
 {% extends "base.html" %}
 
 {% block content %}
+<head>
+  <style>
+    .profile-details {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .profile-details h1 {
+      font-size: 2.5rem;
+      font-weight: bold;
+    }
+
+    .profile-images {
+      margin: 20px auto;
+      display: inline-block;
+    }
+
+    .profile-image img {
+      border-radius: 50%;
+      border: 3px solid #007bff;
+    }
+
+    .profile-details p {
+      font-size: 1.2rem;
+      margin: 5px 0;
+    }
+
+    .kudos-section {
+      margin-top: 30px;
+    }
+
+    .kudos-section h2 {
+      font-size: 2rem;
+      border-bottom: 2px solid #007bff;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+
+    .kudos-item {
+      background-color: #f9f9f9;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+
+    .kudos-item strong {
+      color: #007bff;
+    }
+
+    .kudos-item em {
+      font-size: 0.9rem;
+      color: #555;
+    }
+  </style>
+</head>
 
 <div class="profile-details">
-    <h1>{{ profile.user.first_name}} {{ profile.user.last_name }}</h1>
+    <h1>{{ profile.user.first_name }} {{ profile.user.last_name }}</h1>
     <div class="profile-images">
         <span class="profile-image">
             <img src="{{ profile.picture.url }}" alt="Profile Picture" width="150px">
         </span>
     </div>
-    <p>Position: {{ profile.position }}</p>
-    <p>Team Leader: {{ profile.supervisor }}</p>
-    <p>Summary: {{ profile.bio }}</p>
+    <p><strong>Position:</strong> {{ profile.position }}</p>
+    <p><strong>Team Leader:</strong> {{ profile.supervisor }}</p>
+    <p><strong>Summary:</strong> {{ profile.bio }}</p>
 </div>
-
 
 <div class="kudos-section">
     <h2>Kudos</h2>
-
-        {% for feedback in feedbacks %}
-            <div>
-                <strong>{{ feedback.creation_date }}</strong>: {{ feedback.description }}
-                <em>by {{ feedback.evaluator.user.username }}</em>
-            </div>
-        {% endfor %}
-    </ul>
+    {% for feedback in feedbacks %}
+        <div class="kudos-item">
+            <strong>{{ feedback.creation_date|date:"Y-m-d" }}</strong>: {{ feedback.description }}
+            <br>
+            <em>by {{ feedback.evaluator.user.username }}</em>
+        </div>
+    {% endfor %}
 </div>
 
 {% endblock %}
