@@ -1,10 +1,20 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h2>Send Kudos</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form }}
-    <button type="submit">Send</button>
-  </form>
+<div class="container mt-5">
+    <div class="card shadow-sm" style="border-radius: 15px;">
+        <div class="card-header bg-primary text-white" style="border-top-left-radius: 15px; border-top-right-radius: 15px;">
+            <h2>Send Kudos to your Colleague</h2>
+        </div>
+        <div class="card-body" style="border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;">
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    {{ form.as_p }}
+                </div>
+                <button type="submit" class="btn btn-success btn-block">Send Kudos</button>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}

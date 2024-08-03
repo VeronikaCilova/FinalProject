@@ -11,6 +11,7 @@ from django.db.transaction import atomic
 from django.forms import CharField, Textarea, forms, ModelForm, ModelChoiceField, DateField
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import DetailView
 
 
@@ -23,6 +24,21 @@ from django.contrib.auth.decorators import login_required
 from .models import Feedback, Profile
 from viewer.models import Profile, Goal
 import re
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django import forms
+from .models import Todo
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import openai
+from django.conf import settings
+
 
 
 def home(request):
@@ -44,7 +60,7 @@ class SignUpForm(UserCreationForm):
 
     #position = CharField(label='What is your position', widget=Textarea)
     position = ModelChoiceField(queryset=Position.objects.all())
-    bio = CharField(label='Tell us more about you', widget=Textarea, min_length=40)
+    bio = CharField(label='Tell us more about you', widget=Textarea, min_length=5)
 
     @atomic
     def save(self, commit=True):
@@ -76,7 +92,7 @@ class MyProfileView(View):
             result = Profile.objects.get(user=user)
             return render(request, 'user_page.html', {'title': 'MyProfile', 'profile': result})
 
-        # TODO: home.html
+
         return render(request, 'home.html')
 
 
@@ -112,6 +128,7 @@ def send_kudos(request):
 
     return render(request, 'send_kudos.html', {'form': form})
 
+
 @login_required
 def user_page(request, pk):
     user = request.user
@@ -124,6 +141,10 @@ class FeedbackForm(ModelForm):
     class Meta:
         model = Feedback
         fields = ['description', 'subject_of_review']
+        labels = {
+            'description': 'Type your kudos here',
+            'subject_of_review': 'Select your colleague here',
+        }
         widgets = {
             'description': Textarea(attrs={'rows': 4}),
         }
@@ -302,3 +323,86 @@ class ReviewDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Review
     success_url = reverse_lazy('reviews')
     permission_required = 'viewer.delete_review'
+
+
+
+class TodoForm(forms.ModelForm):
+    class Meta:
+        model = Todo
+        fields = "__all__"
+        #exclude = ["profile"]
+
+
+
+@login_required
+def productivity(request):
+    profile = Profile.objects.get(user=request.user)
+    item_list = Todo.objects.filter(profile=profile).order_by("-date")
+    if request.method == "POST":
+        form = TodoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('todo')
+    form = TodoForm()
+
+    page = {
+        "forms": form,
+        "list": item_list,
+        "title": "TODO LIST",
+    }
+    return render(request, 'productivity.html', page)
+
+
+@login_required
+def edit(request, item_id):
+    item = Todo.objects.get(id=item_id)
+    if request.method == "POST":
+        form = TodoForm(request.POST,instance=item)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Item was updated successfully.")
+            return redirect('todo')
+    else:
+        form = TodoForm(instance=item)
+
+    page = {
+        "forms": form,
+        "title": "Edit Item",
+        "item": "TODO LIST",
+    }
+    return render(request, 'edit_todo.html', page)
+
+@login_required
+def remove(request, item_id):
+    item = Todo.objects.get(id=item_id)
+    item.delete()
+    messages.info(request, "item was removed !!!")
+    return redirect('todo')
+
+
+
+
+@csrf_exempt
+def chatbot_view(request):
+    if request.method == 'POST':
+        try:
+            user_message = request.POST.get('message', '')
+
+
+            if not user_message:
+                return JsonResponse({'error': 'No message provided'}, status=400)
+
+
+            openai.api_key = settings.OPENAI_API_KEY
+            response = openai.Completion.create(
+                engine="text-davinci-003",
+                prompt=user_message,
+                max_tokens=150
+            )
+
+
+            return JsonResponse({'response': response.choices[0].text.strip()})
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    else:
+        return JsonResponse({'error': 'Invalid request'}, status=400)

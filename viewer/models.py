@@ -2,6 +2,8 @@ from django.contrib.auth.models import User
 from django.db.models import (Model, CharField, ForeignKey, DO_NOTHING, ImageField, SET_NULL, TextField, DateField,
                               TextChoices, DateTimeField, BooleanField, CASCADE, OneToOneField)
 
+from django.db import models
+from django.utils import timezone
 
 class Position(Model):
     position = CharField(max_length=128)
@@ -76,14 +78,12 @@ class Review(Model):
         return f"{self.subject_of_review} ({self.creation_date})"
 
 
-class Task(Model):
-    title = CharField(max_length=120)
-    description = TextField(null=True, blank=True)
-    creation_date = DateTimeField(auto_now_add=True)
-    due_date = DateTimeField(default=None, null=True, blank=True)
-    to_do_list = CharField(max_length=500, null=True, blank=True)
-    creator = ForeignKey(Profile, on_delete=DO_NOTHING)
-    completed = BooleanField(default=False)
+
+class Todo(Model):
+    title = models.CharField(max_length=100)
+    details = models.TextField()
+    date = models.DateTimeField(default=timezone.now)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE,blank=True)
 
     def __str__(self):
         return self.title
