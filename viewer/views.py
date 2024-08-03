@@ -298,12 +298,16 @@ class ReviewCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
         LOGGER.warning('User provided invalid data.')
         return super().form_invalid()
 
-    def get_profile_goals(self, request):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         profile = Profile.objects.get(user=self.request.user)
         if profile:
+            mysubordinate = profile.subordinate.all()
             profile_goals = Goal.objects.filter(profile=profile)
-        context = {'goals': profile_goals}
-        return render(request, 'form_review.html', context)
+            mysubordinate_goals = Goal.objects.filter(profile__in=mysubordinate)
+        context["mysubordinate_goals"] = mysubordinate_goals
+        context["mygoals"] = profile_goals
+        return context
 
 
 class ReviewUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):

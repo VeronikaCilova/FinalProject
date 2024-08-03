@@ -11,23 +11,17 @@
     <div class="row">
         <div class="col">
             <div class="form-group">
-                {{ form.evaluator.errors }}
-                <label for="{{ form.evaluator.id_for_label }}"><strong>Evaluator:</strong></label>
-                {{ form.evaluator }}
-            </div>
-        </div>
-        <div class="col">
-            <div class="form-group">
-                {{ form.subject_of_review.errors }}
-                <label for="{{ form.subject_of_review.id_for_label }}"><strong>Reviewee:</strong></label>
-                {{ form.subject_of_review }}
-            </div>
-        </div>
-        <div class="col">
-            <div class="form-group">
                 {{ form.goal.errors }}
                 <label for="{{ form.goal.id_for_label }}"><strong>Goal:</strong></label>
-                {{ form.goal }}
+                <select name="subject_of_review" class="form-control" required id="id_subject_of_review">
+                <option value="" selected>---------</option>
+                {% for goal in mygoals %}
+                <option value="{{goal.id}}">{{goal.profile}} - {{goal.name}}</option>
+                {% endfor %}
+                {% for goal in mysubordinate_goals %}
+                <option value="{{goal.id}}">{{goal.profile}} - {{goal.name}}</option>
+                {% endfor %}
+                </select>
             </div>
         </div>
     </div>
