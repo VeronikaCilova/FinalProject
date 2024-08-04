@@ -22,7 +22,7 @@ from personalportal import settings
 from viewer.views import ProfileView, home
 from viewer import views
 from django.urls import path
-from viewer.views import chatbot_view
+
 
 
 
@@ -60,6 +60,6 @@ urlpatterns = [
     path('todo/', views.productivity, name="todo"),
     path('del/<str:item_id>', views.remove, name="del"),
     path('edit/<int:item_id>/', views.edit, name='edit_item'),
-    path('chatbot/', views.chatbot_view, name='chatbot'),
+
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
