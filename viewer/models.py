@@ -78,7 +78,6 @@ class Review(Model):
         return f"{self.subject_of_review} ({self.creation_date})"
 
 
-
 class Todo(Model):
     title = models.CharField(max_length=100)
     details = models.TextField()
