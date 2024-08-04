@@ -85,6 +85,8 @@ class ProfileView(LoginRequiredMixin, View):
                       'user_page.html',
                       {'title': 'Profile', 'profile': Profile.objects.all()})
 
+
+
 class MyProfileView(View):
     def get(self, request):
         user = request.user
@@ -134,7 +136,31 @@ def user_page(request, pk):
     user = request.user
     profile = Profile.objects.get(user=user)
     feedbacks = Feedback.objects.filter(subject_of_review=profile).order_by('-creation_date')
-    return render(request, 'user_page.html', {'profile': profile, 'feedbacks': feedbacks})
+    subordinates = Profile.objects.filter(supervisor=profile)
+    return render(request, 'user_page.html', {'profile': profile, 'feedbacks': feedbacks, 'subordinates': subordinates})
+
+
+class ProfileUpdateForm(ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['picture', 'bio']
+
+
+@login_required
+def update_profile(request, pk):
+    profile = Profile.objects.get(id=pk)
+    if request.method == 'POST':
+        form = ProfileUpdateForm(request.POST, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+    else:
+        form = ProfileUpdateForm(instance=profile)
+
+
+
+    return render(request, 'update_profile.html', {'form': form})
+
 
 
 class FeedbackForm(ModelForm):
