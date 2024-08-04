@@ -57,6 +57,26 @@
       font-size: 0.9rem;
       color: #555;
     }
+
+    .progress-bar {
+      background-color: #4cae4c;
+      height: 24px;
+      width: 0;
+      border-radius: 12px;
+      transition: width 0.4s ease;
+    }
+
+    .progress-container {
+      background-color: #f3f3f3;
+      border-radius: 12px;
+      padding: 5px;
+      margin-top: 20px;
+    }
+
+    .progress-label {
+      font-size: 1rem;
+      margin-top: 10px;
+    }
   </style>
 </head>
 
@@ -73,13 +93,20 @@
     <a href="{% url 'update_profile' profile.id %}" class="btn btn-secondary">Edit Profile</a>
 </div>
 
+<div class="progress-container">
+    <div class="progress-bar" style="width: {{ progress }}%;"></div>
+</div>
+<div class="progress-label">
+    Completed {{ completed_goals }} out of {{ total_goals }} goals ({{ progress }}%)
+</div>
+
 <div class="kudos-section">
     <h2 style="color: #4cae4c">Kudos</h2>
 
     {% for feedback in feedbacks %}
         <div class="kudos-item">
-            <strong>Feedback from {{ feedback.creation_date|date:"j. n. Y" }}</strong>: {{ feedback.description }}
-            <em>by {{ feedback.evaluator.user.username }}</em>
+            <strong>Kudos from {{ feedback.creation_date|date:"j. n. Y" }}</strong>: {{ feedback.description }}
+            <em>by {{ feedback.evaluator.user.first_name }} {{ feedback.evaluator.user.last_name }}</em>
         </div>
     {% endfor %}
 </div>
