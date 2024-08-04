@@ -18,7 +18,7 @@ from django.views.generic import DetailView
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, FormView, UpdateView, DeleteView
 
-from viewer.models import Profile, Feedback, Position, Review
+from viewer.models import Profile, Feedback, Position, Review, Status
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Feedback, Profile
@@ -85,6 +85,8 @@ class ProfileView(LoginRequiredMixin, View):
                       'user_page.html',
                       {'title': 'Profile', 'profile': Profile.objects.all()})
 
+
+
 class MyProfileView(View):
     def get(self, request):
         user = request.user
@@ -134,7 +136,38 @@ def user_page(request, pk):
     user = request.user
     profile = Profile.objects.get(user=user)
     feedbacks = Feedback.objects.filter(subject_of_review=profile).order_by('-creation_date')
-    return render(request, 'user_page.html', {'profile': profile, 'feedbacks': feedbacks})
+    subordinates = Profile.objects.filter(supervisor=profile)
+
+    goals = Goal.objects.filter(profile=profile)
+    total_goals = goals.count()
+    completed_goals = goals.filter(status=Status.DONE).count()
+    progress = (completed_goals / total_goals) * 100 if total_goals > 0 else 0
+    return render(request, 'user_page.html', {'profile': profile, 'feedbacks': feedbacks, 'subordinates': subordinates,'progress': progress,
+        'total_goals': total_goals,
+        'completed_goals': completed_goals,})
+
+
+class ProfileUpdateForm(ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['picture', 'bio']
+
+
+@login_required
+def update_profile(request, pk):
+    profile = Profile.objects.get(id=pk)
+    if request.method == 'POST':
+        form = ProfileUpdateForm(request.POST, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+    else:
+        form = ProfileUpdateForm(instance=profile)
+
+
+
+    return render(request, 'update_profile.html', {'form': form})
+
 
 
 class FeedbackForm(ModelForm):

@@ -38,6 +38,11 @@ urlpatterns = [
     path('profile/<pk>/', ProfileView.as_view(), name='profile'),
     path('send_kudos/', send_kudos, name='send_kudos'),
     path('user_page/<pk>/', user_page, name='user_page'),
+    path('profile/update/<pk>/', update_profile, name='update_profile'),
+    path('profile/<pk>/', ProfileView.as_view(), name='profile_view'),
+
+
+
 
     path('goals/', GoalsView.as_view(), name='goals'),
     path('goal/create/', GoalCreateView.as_view(), name='goal_create'),
