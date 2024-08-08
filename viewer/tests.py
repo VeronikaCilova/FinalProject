@@ -11,8 +11,3 @@ class TestViewer(TestCase):
     def setUp(self):
         self.viewer = Viewer()
         print('setUp')
-
-    def test_false(self):
-        print('test_false')
-        self.assertFalse(False)
-

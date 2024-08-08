@@ -5,6 +5,7 @@ from django.db.models import (Model, CharField, ForeignKey, DO_NOTHING, ImageFie
 from django.db import models
 from django.utils import timezone
 
+
 class Position(Model):
     position = CharField(max_length=128)
     department = CharField(max_length=128)

@@ -26,7 +26,10 @@ class GoalModelTest(TestCase):
             user_id=1,
             picture=None,
             position=Position.objects.create(position='Manager', department='Fleet'),
-            supervisor=Profile.objects.create(user=User.objects.create(username='Marek Supervisor', email='marek.supervisor@firma.cz', password='nereknu987')),
+            supervisor=Profile.objects.create(user=User.objects.create(
+                username='Marek Supervisor',
+                email='marek.supervisor@firma.cz',
+                password='nereknu987')),
             bio='Profile biography'
         )
         profile.user = user

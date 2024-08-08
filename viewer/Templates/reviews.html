@@ -32,7 +32,7 @@
 {% if user.is_authenticated %}
 <p>
     {% if perms.viewer.add_review %}
-        <a href="{% url 'review_create' %}">➕Create Review</a>
+        <a id="createReviewButton" href="{% url 'review_create' %}">➕Create Review</a>
     {% endif %}
 </p>
 <table id="tableview">
