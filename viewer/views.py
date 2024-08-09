@@ -5,6 +5,7 @@ from operator import attrgetter
 
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
+from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.core.exceptions import ValidationError
 from django.db.transaction import atomic
@@ -254,6 +255,18 @@ class GoalCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
         LOGGER.warning('User provided invalid data.')
         return super().form_invalid()
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        profile = Profile.objects.get(user=self.request.user)
+        username = profile.user.username
+        if username:
+            mysubordinate = profile.subordinate.all()
+            person_profile = User.objects.filter(username=username)
+            mysubordinate_profile = User.objects.filter(profile__in=mysubordinate)
+        context["mysubordinate_profile"] = mysubordinate_profile
+        context["myprofile"] = person_profile
+        return context
+
 
 class GoalUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     template_name = 'form_goal.html'
@@ -265,6 +278,18 @@ class GoalUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     def form_invalid(self, form):
         LOGGER.warning('User provided invalid data.')
         return super().form_invalid()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        profile = Profile.objects.get(user=self.request.user)
+        username = profile.user.username
+        if username:
+            mysubordinate = profile.subordinate.all()
+            person_profile = User.objects.filter(username=username)
+            mysubordinate_profile = User.objects.filter(profile__in=mysubordinate)
+        context["mysubordinate_profile"] = mysubordinate_profile
+        context["myprofile"] = person_profile
+        return context
 
 
 class GoalDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
@@ -388,13 +413,11 @@ class ReviewDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     permission_required = 'viewer.delete_review'
 
 
-
 class TodoForm(forms.ModelForm):
     class Meta:
         model = Todo
         fields = "__all__"
         #exclude = ["profile"]
-
 
 
 @login_required

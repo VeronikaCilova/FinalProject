@@ -16,10 +16,10 @@
                 <select name="goal" class="form-control" required id="id_goal">
                 <option value="" selected>---------</option>
                 {% for goal in mygoals %}
-                <option value="{{goal.id}}">{{goal.profile}} - {{goal.name}}</option>
+                <option value="{{ goal.id }}">{{ goal.profile }} - {{ goal.name }}</option>
                 {% endfor %}
                 {% for goal in mysubordinate_goals %}
-                <option value="{{goal.id}}">{{goal.profile}} - {{goal.name}}</option>
+                <option value="{{ goal.id }}">{{ goal.profile }} - {{ goal.name }}</option>
                 {% endfor %}
                 </select>
             </div>
