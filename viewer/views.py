@@ -316,6 +316,7 @@ class ReviewsView(LoginRequiredMixin, View):
         profile = Profile.objects.get(user=self.request.user)
         myreviews = Review.objects.filter(subject_of_review=profile).order_by('-creation_date')
         evaluation = profile.subordinate.all()
+        # evaluation.ordering = ['-creation_date']
         context = {'reviews': myreviews, 'evaluations': evaluation}
         return render(request, 'reviews.html', context)
 

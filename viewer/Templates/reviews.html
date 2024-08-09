@@ -20,6 +20,7 @@
 #tableview tr:hover {background-color: #ddd;}
 
 #tableview th {
+  font-size: 18px;
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: left;
@@ -29,80 +30,89 @@
 </style>
 
 <h1>My Reviews Summary</h1>
+
 {% if user.is_authenticated %}
+
 <p>
     {% if perms.viewer.add_review %}
         <a href="{% url 'review_create' %}">➕Create Review</a>
     {% endif %}
 </p>
-<table id="tableview">
-    <colgroup>
-        <col width="500">
-    <colgroup span="3" width="100">
-    <tr>
-        <th>Review</th>
-        <th>Dated</th>
-        <th>Created by</th>
-        <th>Revisions</th>
-    </tr>
-        {% for review in reviews %}
-    <tr>
-        <td>{{ review.description }}</td>
-        <td><a href="{% url 'review' review.id %}"><strong>{{ review.creation_date|date:"j. n. Y" }}</strong></a></td>
-        <td>{{ review.evaluator|title }}</td>
-        <td>
-            {% if user.is_authenticated %}
-                {% if perms.viewer.change_review %}
-                    <a href="{% url 'review_update' review.id %}">✏️Update</a>
-                {% endif %}
-                {% if perms.viewer.delete_review %}
-                    <a href="{% url 'review_delete' review.id %}">❌Delete</a>
-                {% endif %}
-            {% endif %}
-        </td>
-    </tr>
-    {% empty %}
-        <p>List of goals is empty.</p>
-    {% endfor %}
-</table>
 
-<p>
+<div class="container mt-5" style="border-radius: 15px;">
+    <div class="card shadow-sm">
+        <table id="tableview">
+            <colgroup>
+                <col width="500">
+            <colgroup span="3" width="100">
+            <tr>
+                <th>Review</th>
+                <th>Dated</th>
+                <th>Created by</th>
+                <th>Revisions</th>
+            </tr>
+                {% for review in reviews %}
+            <tr>
+                <td>{{ review.description }}</td>
+                <td><a href="{% url 'review' review.id %}"><strong>{{ review.creation_date|date:"j. n. Y" }}</strong></a></td>
+                <td>{{ review.evaluator|title }}</td>
+                <td>
+                    {% if user.is_authenticated %}
+                        {% if perms.viewer.change_review %}
+                            <a href="{% url 'review_update' review.id %}">✏️Update</a>
+                        {% endif %}
+                        {% if perms.viewer.delete_review %}
+                            <a href="{% url 'review_delete' review.id %}">❌Delete</a>
+                        {% endif %}
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+                <p>List of goals is empty.</p>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+
 {% for evaluation in evaluations %}
-    <p>
-        <h2> {{ evaluation }} <img src="{{ evaluation.picture.url }}" alt="Profile Picture" width="40px"> </h2>
-    </p>
+<br>
+<h2> {{ evaluation }} <img src="{{ evaluation.picture.url }}" alt="Profile Picture" width="40px"> </h2>
 
-<table id="tableview">
-    <colgroup>
-        <col width="500">
-    <colgroup span="3" width="100">
-    <tr>
-        <th>Review</th>
-        <th>Dated</th>
-        <th>Created by</th>
-        <th>Revisions</th>
-    </tr>
-        {% for review in evaluation.get_all_reviews %}
-    <tr>
-        <td>{{ review.description }}</td>
-        <td><a href="{% url 'review' review.id %}"><strong>{{ review.creation_date|date:"j. n. Y" }}</strong></a></td>
-        <td>{{ review.evaluator|title }}</td>
-        <td>
-            {% if user.is_authenticated %}
-                {% if perms.viewer.change_review %}
-                    <a href="{% url 'review_update' review.id %}">✏️Update</a>
-                {% endif %}
-                {% if perms.viewer.delete_review %}
-                    <a href="{% url 'review_delete' review.id %}">❌Delete</a>
-                {% endif %}
-            {% endif %}
-        </td>
-    </tr>
-    {% empty %}
-        <p>List of goals is empty.</p>
-    {% endfor %}
-</table>
+<div class="container mt-5" style="border-radius: 15px;">
+    <div class="card shadow-sm">
+        <table id="tableview">
+            <colgroup>
+                <col width="500">
+            <colgroup span="3" width="100">
+            <tr>
+                <th>Review</th>
+                <th>Dated</th>
+                <th>Created by</th>
+                <th>Revisions</th>
+            </tr>
+                {% for review in evaluation.get_all_reviews %}
+            <tr>
+                <td>{{ review.description }}</td>
+                <td><a href="{% url 'review' review.id %}"><strong>{{ review.creation_date|date:"j. n. Y" }}</strong></a></td>
+                <td>{{ review.evaluator|title }}</td>
+                <td>
+                    {% if user.is_authenticated %}
+                        {% if perms.viewer.change_review %}
+                            <a href="{% url 'review_update' review.id %}">✏️Update</a>
+                        {% endif %}
+                        {% if perms.viewer.delete_review %}
+                            <a href="{% url 'review_delete' review.id %}">❌Delete</a>
+                        {% endif %}
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+                <p>List of goals is empty.</p>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+
 {% endfor %}
-</p>
 {% endif %}
 {% endblock %}

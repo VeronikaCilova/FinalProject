@@ -5,6 +5,21 @@
 {% block content %}
 
 <style>
+* {
+  box-sizing: border-box;
+}
+
+#myInput {
+  background-image: url('/css/searchicon.png');
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+
 #goals {
   border-collapse: collapse;
   width: 100%;
@@ -20,6 +35,7 @@
 #goals tr:hover {background-color: #ddd;}
 
 #goals th {
+  font-size: 18px;
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: left;
@@ -28,78 +44,112 @@
 }
 </style>
 
+<h1>Personal Goals Overview</h1>
+
+{% if user.is_authenticated %}
+
 <p>
     {% if perms.viewer.add_goal %}
         <a href="{% url 'goal_create' %}">➕Create Goal</a>
     {% endif %}
 </p>
 
-<h1>Personal Goals Overview</h1>
-{% if user.is_authenticated %}
-<table id="goals">
-    <tr>
-        <th>Goal Name</th>
-        <th>Target Date</th>
-        <th>Priority</th>
-        <th>Status</th>
-        <th>Revisions</th>
-    </tr>
-    {% for goal in goals %}
-    <tr>
-        <td><a href="{% url 'goal' goal.id %}"><strong>{{ goal.name }}</strong></a></td>
-        <td>{{ goal.deadline|date:"j. n. Y" }}</td>
-        <td>{{ goal.priority|title }}</td>
-        <td>{{ goal.status|upper }}</td>
-        <td>
-            {% if user.is_authenticated %}
-            {% if perms.viewer.change_goal %}
-                <a href="{% url 'goal_update' goal.id %}">✏️Update</a>
-            {% endif %}
-            {% if perms.viewer.delete_goal %}
-                <a href="{% url 'goal_delete' goal.id %}">❌Delete</a>
-            {% endif %}
-            {% endif %}
-        </td>
-    </tr>
-    {% empty %}
-        <p>List of goals is empty.</p>
-    {% endfor %}
-</table>
+<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for name..." title="Type in a name">
 
-<p>
+<div class="container mt-5" style="border-radius: 15px;">
+    <div class="card shadow-sm">
+        <table id="goals">
+            <tr>
+                <th>Goal Name</th>
+                <th>Target Date</th>
+                <th>Priority</th>
+                <th>Status</th>
+                <th>Revisions</th>
+            </tr>
+            {% for goal in goals %}
+            <tr>
+                <td><a href="{% url 'goal' goal.id %}"><strong>{{ goal.name }}</strong></a></td>
+                <td>{{ goal.deadline|date:"j. n. Y" }}</td>
+                <td>{{ goal.priority|title }}</td>
+                <td>{{ goal.status|upper }}</td>
+                <td>
+                    {% if user.is_authenticated %}
+                    {% if perms.viewer.change_goal %}
+                        <a href="{% url 'goal_update' goal.id %}">✏️Update</a>
+                    {% endif %}
+                    {% if perms.viewer.delete_goal %}
+                        <a href="{% url 'goal_delete' goal.id %}">❌Delete</a>
+                    {% endif %}
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+                <p>List of goals is empty.</p>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+
 {% for subordinate in subordinates %}
+<br>
 <h2> {{ subordinate }} <img src="{{ subordinate.picture.url }}" alt="Profile Picture" width="40px"></h2>
-<table id="goals">
-    <tr>
-        <th>Goal Name</th>
-        <th>Target Date</th>
-        <th>Priority</th>
-        <th>Status</th>
-        <th>Revisions</th>
-    </tr>
-    {% for goal in subordinate.get_all_goals %}
-    <tr>
-        <td><a href="{% url 'goal' goal.id %}"><strong>{{ goal.name }}</strong></a></td>
-        <td>{{ goal.deadline|date:"j. n. Y" }}</td>
-        <td>{{ goal.priority|title }}</td>
-        <td>{{ goal.status|upper }}</td>
-        <td>
-            {% if user.is_authenticated %}
-            {% if perms.viewer.change_goal %}
-                <a href="{% url 'goal_update' goal.id %}">✏️Update</a>
-            {% endif %}
-            {% if perms.viewer.delete_goal %}
-                <a href="{% url 'goal_delete' goal.id %}">❌Delete</a>
-            {% endif %}
-            {% endif %}
-        </td>
-    </tr>
-    {% empty %}
-        <p>List of goals is empty.</p>
-    {% endfor %}
-</table>
-{% endfor %}
-</p>
 
+<div class="container mt-5" style="border-radius: 15px;">
+    <div class="card shadow-sm">
+        <table id="goals">
+            <tr>
+                <th>Goal Name</th>
+                <th>Target Date</th>
+                <th>Priority</th>
+                <th>Status</th>
+                <th>Revisions</th>
+            </tr>
+            {% for goal in subordinate.get_all_goals %}
+            <tr>
+                <td><a href="{% url 'goal' goal.id %}"><strong>{{ goal.name }}</strong></a></td>
+                <td>{{ goal.deadline|date:"j. n. Y" }}</td>
+                <td>{{ goal.priority|title }}</td>
+                <td>{{ goal.status|upper }}</td>
+                <td>
+                    {% if user.is_authenticated %}
+                    {% if perms.viewer.change_goal %}
+                        <a href="{% url 'goal_update' goal.id %}">✏️Update</a>
+                    {% endif %}
+                    {% if perms.viewer.delete_goal %}
+                        <a href="{% url 'goal_delete' goal.id %}">❌Delete</a>
+                    {% endif %}
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+                <p>List of goals is empty.</p>
+            {% endfor %}
+        </table>
+
+        <script>
+        function myFunction() {
+          var input, filter, table, tr, td, i, txtValue;
+          input = document.getElementById("myInput");
+          filter = input.value.toUpperCase();
+          table = document.getElementById("goals");
+          tr = table.getElementsByTagName("tr");
+          for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            if (td) {
+              txtValue = td.textContent || td.innerText;
+              if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+              } else {
+                tr[i].style.display = "none";
+              }
+            }
+          }
+        }
+        </script>
+
+    </div>
+</div>
+
+{% endfor %}
 {% endif %}
 {% endblock %}
