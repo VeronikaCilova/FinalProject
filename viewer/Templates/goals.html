@@ -10,14 +10,14 @@
 }
 
 #myInput {
-  background-image: url('/css/searchicon.png');
   background-position: 10px 10px;
   background-repeat: no-repeat;
-  width: 100%;
+  width: 25%;
   font-size: 16px;
-  padding: 12px 20px 12px 40px;
+  padding: 5px 20px 5px 20px;
   border: 1px solid #ddd;
-  margin-bottom: 12px;
+  margin-top: 6px;
+  margin-bottom: 1px;
 }
 
 #goals {
@@ -54,7 +54,7 @@
     {% endif %}
 </p>
 
-<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for name..." title="Type in a name">
+<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for goal name..." title="Type in a name">
 
 <div class="container mt-5" style="border-radius: 15px;">
     <div class="card shadow-sm">
@@ -92,7 +92,10 @@
 
 {% for subordinate in subordinates %}
 <br>
+
 <h2> {{ subordinate }} <img src="{{ subordinate.picture.url }}" alt="Profile Picture" width="40px"></h2>
+
+<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for goal name..." title="Type in a name">
 
 <div class="container mt-5" style="border-radius: 15px;">
     <div class="card shadow-sm">

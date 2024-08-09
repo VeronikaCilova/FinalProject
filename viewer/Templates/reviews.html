@@ -5,6 +5,21 @@
 {% block content %}
 
 <style>
+* {
+  box-sizing: border-box;
+}
+
+#myInput {
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+  width: 25%;
+  font-size: 16px;
+  padding: 5px 20px 5px 20px;
+  border: 1px solid #ddd;
+  margin-top: 6px;
+  margin-bottom: 1px;
+}
+
 #tableview {
   border-collapse: collapse;
   width: 100%;
@@ -38,6 +53,8 @@
         <a href="{% url 'review_create' %}">➕Create Review</a>
     {% endif %}
 </p>
+
+<input type="text" id="myInput" onkeyup="searchYear()" placeholder="Search for year..." title="Type in a year">
 
 <div class="container mt-5" style="border-radius: 15px;">
     <div class="card shadow-sm">
@@ -78,6 +95,8 @@
 <br>
 <h2> {{ evaluation }} <img src="{{ evaluation.picture.url }}" alt="Profile Picture" width="40px"> </h2>
 
+<input type="text" id="myInput" onkeyup="searchYear()" placeholder="Search for year..." title="Type in a year">
+
 <div class="container mt-5" style="border-radius: 15px;">
     <div class="card shadow-sm">
         <table id="tableview">
@@ -110,6 +129,32 @@
                 <p>List of goals is empty.</p>
             {% endfor %}
         </table>
+
+        <script>
+        function searchYear() {
+          var input, filter, table, tr, td, i, txtValue, datePattern, year;
+          input = document.getElementById("myInput");
+          filter = input.value;
+          table = document.getElementById("tableview");
+          tr = table.getElementsByTagName("tr");
+          datePattern = /^\d{1,2}\.\s\d{1,2}\.\s(\d{4})$/;
+
+          for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[1];
+            if (td) {
+              txtValue = td.textContent || td.innerText;
+              year = txtValue.match(datePattern[2]);
+
+              if (year === filter) {
+                tr[i].style.display = "";
+              } else {
+                tr[i].style.display = "none";
+              }
+            }
+          }
+        }
+        </script>
+
     </div>
 </div>
 
