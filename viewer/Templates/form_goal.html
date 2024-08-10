@@ -22,9 +22,7 @@
                 <label for="id_profile"><strong>Person:</strong></label>
                 <select name="profile" class="form-control" required id="id_profile">
                 <option value="" selected>---------</option>
-                {% for profile in myprofile %}
-                <option value="{{ profile.id }}">{{ profile.first_name }} {{profile.last_name}}</option>
-                {% endfor %}
+                <option value="{{ myprofile.id }}">{{ myprofile.user.first_name }} {{myprofile.user.last_name}}</option>
                 {% for profile in mysubordinate_profile %}
                 <option value="{{ profile.id }}">{{ profile.first_name }} {{profile.last_name}}</option>
                 {% endfor %}

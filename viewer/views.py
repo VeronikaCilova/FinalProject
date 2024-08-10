@@ -261,10 +261,9 @@ class GoalCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
         username = profile.user.username
         if username:
             mysubordinate = profile.subordinate.all()
-            person_profile = User.objects.filter(username=username)
             mysubordinate_profile = User.objects.filter(profile__in=mysubordinate)
         context["mysubordinate_profile"] = mysubordinate_profile
-        context["myprofile"] = person_profile
+        context["myprofile"] = profile
         return context
 
 
@@ -285,10 +284,9 @@ class GoalUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
         username = profile.user.username
         if username:
             mysubordinate = profile.subordinate.all()
-            person_profile = User.objects.filter(username=username)
             mysubordinate_profile = User.objects.filter(profile__in=mysubordinate)
         context["mysubordinate_profile"] = mysubordinate_profile
-        context["myprofile"] = person_profile
+        context["myprofile"] = profile
         return context
 
 

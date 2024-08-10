@@ -20,21 +20,21 @@
   margin-bottom: 1px;
 }
 
-#goals {
+.goals {
   border-collapse: collapse;
   width: 100%;
 }
 
-#goals td, #goals th {
+.goals td, .goals th {
   border: 1px solid #ddd;
   padding: 8px;
 }
 
-#goals tr:nth-child(even){background-color: #f2f2f2;}
+.goals tr:nth-child(even){background-color: #f2f2f2;}
 
-#goals tr:hover {background-color: #ddd;}
+.goals tr:hover {background-color: #ddd;}
 
-#goals th {
+.goals th {
   font-size: 18px;
   padding-top: 12px;
   padding-bottom: 12px;
@@ -58,7 +58,7 @@
 
 <div class="container mt-5" style="border-radius: 15px;">
     <div class="card shadow-sm">
-        <table id="goals">
+        <table id="goals" class="goals">
             <tr>
                 <th>Goal Name</th>
                 <th>Target Date</th>
@@ -89,17 +89,38 @@
         </table>
     </div>
 </div>
+        <script>
+        function myFunction() {
+          var input, filter, table, tr, td, i, txtValue;
+          input = document.getElementById("myInput");
+          filter = input.value.toUpperCase();
+          table = document.getElementById("goals");
+          tr = table.getElementsByTagName("tr");
+
+          for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            if (td) {
+              txtValue = td.textContent || td.innerText;
+              if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+              } else {
+                tr[i].style.display = "none";
+              }
+            }
+          }
+        }
+        </script>
 
 {% for subordinate in subordinates %}
 <br>
 
 <h2> {{ subordinate }} <img src="{{ subordinate.picture.url }}" alt="Profile Picture" width="40px"></h2>
 
-<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for goal name..." title="Type in a name">
+<input type="text" id="myInput{{subordinate.id}}" onkeyup="myFunction{{subordinate.id}}()" placeholder="Search for goal name..." title="Type in a name">
 
 <div class="container mt-5" style="border-radius: 15px;">
     <div class="card shadow-sm">
-        <table id="goals">
+        <table id="goals{{subordinate.id}}" class="goals">
             <tr>
                 <th>Goal Name</th>
                 <th>Target Date</th>
@@ -130,20 +151,22 @@
         </table>
 
         <script>
-        function myFunction() {
-          var input, filter, table, tr, td, i, txtValue;
-          input = document.getElementById("myInput");
-          filter = input.value.toUpperCase();
-          table = document.getElementById("goals");
-          tr = table.getElementsByTagName("tr");
-          for (i = 0; i < tr.length; i++) {
-            td = tr[i].getElementsByTagName("td")[0];
+        function myFunction{{subordinate.id}}() {
+          var input{{subordinate.id}}, filter{{subordinate.id}},
+            table{{subordinate.id}}, tr{{subordinate.id}}, i, txtValue;
+          input{{subordinate.id}} = document.getElementById("myInput{{subordinate.id}}");
+          filter{{subordinate.id}} = input{{subordinate.id}}.value.toUpperCase();
+          table{{subordinate.id}} = document.getElementById("goals{{subordinate.id}}");
+          tr{{subordinate.id}} = table{{subordinate.id}}.getElementsByTagName("tr");
+
+          for (i = 0; i < tr{{subordinate.id}}.length; i++) {
+            td = tr{{subordinate.id}}[i].getElementsByTagName("td")[0];
             if (td) {
               txtValue = td.textContent || td.innerText;
-              if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                tr[i].style.display = "";
+              if (txtValue.toUpperCase().indexOf(filter{{subordinate.id}}) > -1) {
+                tr{{subordinate.id}}[i].style.display = "";
               } else {
-                tr[i].style.display = "none";
+                tr{{subordinate.id}}[i].style.display = "none";
               }
             }
           }
