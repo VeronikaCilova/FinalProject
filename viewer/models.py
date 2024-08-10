@@ -10,8 +10,8 @@ class Position(Model):
     position = CharField(max_length=128)
     department = CharField(max_length=128)
 
-    #class Meta:
-        #ordering = ['position_name']
+    # class Meta:
+    #     ordering = ['position_name']
 
     def __str__(self):
         return self.position
@@ -24,17 +24,17 @@ class Profile(Model):
     supervisor = ForeignKey('Profile', null=True, blank=True, on_delete=SET_NULL, related_name='subordinate')
     bio = TextField(null=True, blank=True)
 
-    #class Meta:
-        #ordering = ['last_name', 'first_name']
+    # class Meta:
+    #     ordering = ['last_name', 'first_name']
 
     def __str__(self):
         return f'{self.user.first_name} {self.user.last_name}'
 
     def get_all_goals(self):
-        return Goal.objects.filter(profile=self)
+        return Goal.objects.filter(profile=self).order_by('-deadline')
 
     def get_all_reviews(self):
-        return Review.objects.filter(subject_of_review=self)
+        return Review.objects.filter(subject_of_review=self).order_by('-creation_date')
 
     def get_picture(self):
         return self.picture
@@ -60,8 +60,8 @@ class Goal(Model):
     priority = CharField(max_length=64, choices=Priority.choices, null=True, blank=True)
     status = CharField(max_length=10, choices=Status.choices, null=True, blank=True)
 
-    #class Meta:
-        #ordering = ['name', 'deadline']
+    # class Meta:
+    #     ordering = ['name', 'deadline']
 
     def __str__(self):
         return f"{self.name} ({self.deadline})"
@@ -75,6 +75,9 @@ class Review(Model):
     goal = CharField(max_length=500, null=True, blank=True)
     training = CharField(max_length=250, null=True, blank=True)
 
+    # class Meta:
+    #     ordering = ['-creation_date']
+
     def __str__(self):
         return f"{self.subject_of_review} ({self.creation_date})"
 
@@ -83,7 +86,7 @@ class Todo(Model):
     title = models.CharField(max_length=100)
     details = models.TextField()
     date = models.DateTimeField(default=timezone.now)
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE,blank=True)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, blank=True)
 
     def __str__(self):
         return self.title
@@ -97,5 +100,3 @@ class Feedback(Model):
 
     def __str__(self):
         return f"{self.subject_of_review} ({self.creation_date})"
-
-
