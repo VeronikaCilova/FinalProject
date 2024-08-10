@@ -14,7 +14,7 @@
                     <a class="nav-item nav-link active" href="{% url 'user_page' user.id %}">Profile</a>
                     <a class="nav-item nav-link active" href="{% url 'goals' %}">Goals</a>
                     <a class="nav-item nav-link active" href="{% url 'reviews' %}">Reviews</a>
-                    <a class="nav-item nav-link {% if request.path == '/send-kudos/' %}active{% endif %}" href="{% url 'send_kudos' %}">Send KUDOS</a>
+                    <a class="nav-item nav-link {% if request.path == '/send-kudos/' %}active{% endif %}" href="{% url 'send_kudos' %}">Kudos</a>
                     <a class="nav-item nav-link {% if request.path == '/todo/' %}active{% endif %}" href="{% url 'todo' %}">Productivity</a>
 
                 {% endif %}

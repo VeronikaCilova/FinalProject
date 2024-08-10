@@ -116,7 +116,7 @@
 
 <h2> {{ subordinate }} <img src="{{ subordinate.picture.url }}" alt="Profile Picture" width="40px"></h2>
 
-<input type="text" id="myInput{{subordinate.id}}" onkeyup="myFunction{{subordinate.id}}()" placeholder="Search for goal name..." title="Type in a name">
+<input type="text" id="myInput{{ subordinate.id }}" onkeyup="myFunction{{ subordinate.id }}()" placeholder="Search for goal name..." title="Type in a name">
 
 <div class="container mt-5" style="border-radius: 15px;">
     <div class="card shadow-sm">
@@ -151,22 +151,22 @@
         </table>
 
         <script>
-        function myFunction{{subordinate.id}}() {
-          var input{{subordinate.id}}, filter{{subordinate.id}},
-            table{{subordinate.id}}, tr{{subordinate.id}}, i, txtValue;
-          input{{subordinate.id}} = document.getElementById("myInput{{subordinate.id}}");
-          filter{{subordinate.id}} = input{{subordinate.id}}.value.toUpperCase();
-          table{{subordinate.id}} = document.getElementById("goals{{subordinate.id}}");
-          tr{{subordinate.id}} = table{{subordinate.id}}.getElementsByTagName("tr");
+        function myFunction{{ subordinate.id }}() {
+          var input{{ subordinate.id }}, filter{{ subordinate.id }},
+          table{{ subordinate.id }}, tr{{ subordinate.id }}, i, txtValue;
+          input{{ subordinate.id }} = document.getElementById("myInput{{ subordinate.id }}");
+          filter{{ subordinate.id }} = input{{ subordinate.id }}.value.toUpperCase();
+          table{{ subordinate.id }} = document.getElementById("goals{{ subordinate.id }}");
+          tr{{ subordinate.id }} = table{{ subordinate.id }}.getElementsByTagName("tr");
 
-          for (i = 0; i < tr{{subordinate.id}}.length; i++) {
-            td = tr{{subordinate.id}}[i].getElementsByTagName("td")[0];
+          for (i = 0; i < tr{{ subordinate.id }}.length; i++) {
+            td = tr{{ subordinate.id }}[i].getElementsByTagName("td")[0];
             if (td) {
               txtValue = td.textContent || td.innerText;
-              if (txtValue.toUpperCase().indexOf(filter{{subordinate.id}}) > -1) {
-                tr{{subordinate.id}}[i].style.display = "";
+              if (txtValue.toUpperCase().indexOf(filter{{ subordinate.id }}) > -1) {
+                tr{{ subordinate.id }}[i].style.display = "";
               } else {
-                tr{{subordinate.id}}[i].style.display = "none";
+                tr{{ subordinate.id }}[i].style.display = "none";
               }
             }
           }

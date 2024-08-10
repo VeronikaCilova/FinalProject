@@ -57,7 +57,7 @@ class SubmittablePasswordChangeView(PasswordChangeView):
 
 class SignUpForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
-        fields = ['username','first_name', 'last_name', 'password1', 'password2']
+        fields = ['username', 'first_name', 'last_name', 'password1', 'password2']
 
     #position = CharField(label='What is your position', widget=Textarea)
     position = ModelChoiceField(queryset=Position.objects.all())
@@ -94,7 +94,6 @@ class MyProfileView(View):
         if Profile.objects.filter(user=user).exists():  # otestujeme, zda profil existuje
             result = Profile.objects.get(user=user)
             return render(request, 'user_page.html', {'title': 'MyProfile', 'profile': result})
-
 
         return render(request, 'home.html')
 
@@ -143,9 +142,14 @@ def user_page(request, pk):
     total_goals = goals.count()
     completed_goals = goals.filter(status=Status.DONE).count()
     progress = (completed_goals / total_goals) * 100 if total_goals > 0 else 0
-    return render(request, 'user_page.html', {'profile': profile, 'feedbacks': feedbacks, 'subordinates': subordinates,'progress': progress,
+    return render(request, 'user_page.html', {
+        'profile': profile,
+        'feedbacks': feedbacks,
+        'subordinates': subordinates,
+        'progress': progress,
         'total_goals': total_goals,
-        'completed_goals': completed_goals,})
+        'completed_goals': completed_goals,
+    })
 
 
 class ProfileUpdateForm(ModelForm):
@@ -165,10 +169,7 @@ def update_profile(request, pk):
     else:
         form = ProfileUpdateForm(instance=profile)
 
-
-
     return render(request, 'update_profile.html', {'form': form})
-
 
 
 class FeedbackForm(ModelForm):

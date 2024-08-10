@@ -88,6 +88,28 @@
                 <p>List of goals is empty.</p>
             {% endfor %}
         </table>
+                <script>
+        function searchYear() {
+          var input, filter, table, tr, td, i, txtValue, datePattern;
+          input = document.getElementById("myInput");
+          filter = input.value;
+          table = document.getElementById("tableview");
+          tr = table.getElementsByTagName("tr");
+          datePattern = /^\d{1,2}\.\s\d{1,2}\.\s(\d{4})$/;
+
+          for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[1];
+            if (td) {
+              txtValue = td.textContent || td.innerText;
+              if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+              } else {
+                tr[i].style.display = "none";
+              }
+            }
+          }
+        }
+        </script>
     </div>
 </div>
 
@@ -95,11 +117,11 @@
 <br>
 <h2> {{ evaluation }} <img src="{{ evaluation.picture.url }}" alt="Profile Picture" width="40px"> </h2>
 
-<input type="text" id="myInput2" onkeyup="searchYear()" placeholder="Search for year..." title="Type in a year">
+<input type="text" id="myInput{{ evaluation.id }}" onkeyup="searchYear{{ evaluation.id }}()" placeholder="Search for year..." title="Type in a year">
 
 <div class="container mt-5" style="border-radius: 15px;">
     <div class="card shadow-sm">
-        <table id="tableview2" class="tableview">
+        <table id="tableview{{ evaluation.id }}" class="tableview">
             <colgroup>
                 <col width="500">
             <colgroup span="3" width="100">
@@ -131,37 +153,23 @@
         </table>
 
         <script>
-        function searchYear() {
-          var input, input2, filter, filter2, table, table2, tr, tr2, td, i, txtValue, datePattern;
-          input = document.getElementById("myInput");
-          input2 = document.getElementById("myInput2");
-          filter = input.value;
-          filter2 = input2.value;
-          table = document.getElementById("tableview");
-          table2 = document.getElementById("tableview2");
-          tr = table.getElementsByTagName("tr");
-          tr2 = table2.getElementsByTagName("tr");
+        function searchYear{{ evaluation.id }}() {
+          var input{{ evaluation.id }}, filter{{ evaluation.id }},
+          table{{ evaluation.id }}, tr{{ evaluation.id }}, td, i, txtValue, datePattern;
+          input{{ evaluation.id }} = document.getElementById("myInput{{ evaluation.id }}");
+          filter{{ evaluation.id }} = input{{ evaluation.id }}.value;
+          table{{ evaluation.id }} = document.getElementById("tableview{{ evaluation.id }}");
+          tr{{ evaluation.id }} = table{{ evaluation.id }}.getElementsByTagName("tr");
           datePattern = /^\d{1,2}\.\s\d{1,2}\.\s(\d{4})$/;
 
-          for (i = 0; i < tr.length; i++) {
-            td = tr[i].getElementsByTagName("td")[1];
+          for (i = 0; i < tr{{ evaluation.id }}.length; i++) {
+            td = tr{{ evaluation.id }}[i].getElementsByTagName("td")[1];
             if (td) {
               txtValue = td.textContent || td.innerText;
-              if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                tr[i].style.display = "";
+              if (txtValue.toUpperCase().indexOf(filter{{ evaluation.id }}) > -1) {
+                tr{{ evaluation.id }}[i].style.display = "";
               } else {
-                tr[i].style.display = "none";
-              }
-            }
-          }
-          for (i = 0; i < tr2.length; i++) {
-            td = tr2[i].getElementsByTagName("td")[1];
-            if (td) {
-              txtValue = td.textContent || td.innerText;
-              if (txtValue.toUpperCase().indexOf(filter2) > -1) {
-                tr2[i].style.display = "";
-              } else {
-                tr2[i].style.display = "none";
+                tr{{ evaluation.id }}[i].style.display = "none";
               }
             }
           }
