@@ -5,7 +5,7 @@
     {% csrf_token %}
     <table>{{ form }}</table>
     {% comment %} {{ form.as_p }} {% endcomment %}
-    <input type="submit" value="Submit" class="btn btn-success">
+    <input type="submit" value="Submit" class="btn btn-success" style="background-color: #04AA6D">
     <input type="button" value="Cancel" class="btn btn-primary" onclick="history.back()"/>
 </form>
 {% endblock %}

@@ -54,7 +54,7 @@
                 Welcome to Personal Portal, the ultimate platform for enhancing workplace productivity
                 and growth. Whether you're a leader guiding a team or an employee striving for excellence,
                 our Personal Portal empowers you to set goals, give and receive performance reviews,
-                and gather valuable feedback—all in one place. Our intuitive tools help you track progress,
+                and gather valuable feedback - all in one place. Our intuitive tools help you track progress,
                 follow up on tasks, and even plan essential training sessions, ensuring continuous improvement
                 and success. Sign up today and take control of your professional development with our Personal Portal,
                 where every goal leads to growth.
@@ -63,11 +63,15 @@
 
         {% if user.is_authenticated %}
             <p>Hello, {{ user.first_name }}!</p>
-            <p><a href="{% url 'logout' %}" class="button">Logout</a></p>
+            <form class="logout-form" action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="button" style="background-color: #04AA6D">Logout</button>
+            </form>
+<!--            <p><a href="{% url 'logout' %}" class="button" style="background-color: #04AA6D">Logout</a></p>-->
         {% else %}
             <h3>Hello, would you like to enjoy more content? Please sign up or sign in below:</h3>
-            <p><a href="{% url 'login' %}" class="button">Login</a></p>
-            <p><a href="{% url 'signup' %}" class="button">Register</a></p>
+            <p><a href="{% url 'login' %}" class="button" style="background-color: #04AA6D">Login</a></p>
+            <p><a href="{% url 'signup' %}" class="button" style="background-color: #04AA6D">Register</a></p>
         {% endif %}
     </div>
 </body>

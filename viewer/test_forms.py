@@ -1,3 +1,5 @@
+import datetime
+
 from django.test import TestCase
 
 from viewer.models import *
@@ -5,9 +7,33 @@ from viewer.views import ReviewForm, GoalForm
 
 
 class ReviewFormTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        goal = Goal.objects.create(
+            profile_id=2,
+            name='Random name2',
+            description='Detailed description2',
+            deadline=datetime.date(year=2026, month=1, day=25),
+            priority='Highest priority2',
+            status='Defined status2'
+        )
+        profile = Profile.objects.create(
+            user_id=1,
+            picture=None,
+            position=Position.objects.create(position='Manager', department='Fleet'),
+            supervisor=Profile.objects.create(user=User.objects.create(
+                username='Marek Supervisor',
+                email='marek.supervisor@firma.cz',
+                password='nereknu987')),
+            bio='Profile biography'
+        )
+        goal.profile = profile
+        goal.save()
+
     def test_review_form_is_valid(self):
+        goal = Goal.objects.get(id=1)
         form = ReviewForm(
-            data={'goal': 'Test something',
+            data={'goal': goal.id,
                   'description': 'Test description',
                   'training': 'Test training'
                   }

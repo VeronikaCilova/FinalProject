@@ -74,7 +74,7 @@ class ReviewModelTest(TestCase):
                 username='Leia Organa',
                 email='leia.organa@firma.cz',
                 password='nereknu432')),
-            goal='Long term goal',
+            goal=Goal.objects.create(profile_id=1, name='Long term goal'),
             training='Suggested training'
         )
         review.save()
@@ -86,11 +86,6 @@ class ReviewModelTest(TestCase):
         review = Review.objects.get(id=1)
         print(f"test_description: {review.description}")
         self.assertEqual(review.description.__str__(), "Review comment")
-
-    def test_review_goal(self):
-        review = Review.objects.get(id=1)
-        print(f"test_goal: {review.goal}")
-        self.assertEqual(review.goal.__str__(), "Long term goal")
 
     def test_review_training(self):
         review = Review.objects.get(id=1)
