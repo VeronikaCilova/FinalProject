@@ -7,16 +7,13 @@
 
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-                <a class="nav-item nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'home' %}">
-                    Home
-                </a>
+                <a class="nav-item nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'home' %}">Home</a>
                 {% if user.is_authenticated %}
-                    <a class="nav-item nav-link active" href="{% url 'user_page' user.id %}">Profile</a>
-                    <a class="nav-item nav-link active" href="{% url 'goals' %}">Goals</a>
-                    <a id="reviewsLink" class="nav-item nav-link active" href="{% url 'reviews' %}">Reviews</a>
-                    <a class="nav-item nav-link {% if request.path == '/send-kudos/' %}active{% endif %}" href="{% url 'send_kudos' %}">Send KUDOS</a>
-                    <a class="nav-item nav-link {% if request.path == '/todo/' %}active{% endif %}" href="{% url 'todo' %}">Productivity</a>
-
+                    <a class="nav-item nav-link {% if request.path == user_page %}active{% endif %}" href="{% url 'user_page' user.id %}">Profile</a>
+                    <a class="nav-item nav-link {% if request.path == goals %}active{% endif %}" href="{% url 'goals' %}">Goals</a>
+                    <a id="reviewsLink" class="nav-item nav-link {% if request.path == reviews %}active{% endif %}" href="{% url 'reviews' %}">Reviews</a>
+                    <a class="nav-item nav-link {% if request.path == send_kudos %}active{% endif %}" href="{% url 'send_kudos' %}">Send KUDOS</a>
+                    <a class="nav-item nav-link {% if request.path == todo %}active{% endif %}" href="{% url 'todo' %}">Productivity</a>
                 {% endif %}
             </div>
 
@@ -27,9 +24,9 @@
                             {% if user.first_name %}Hello, {{ user.first_name }}!{% else %}Hello, {{ user.username }}!{% endif %}
                         </a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                            <form class="dropdown-item" action="{% url 'logout' %}" method="post">
+                            <form class="dropdown-item logout-form" action="{% url 'logout' %}" method="post">
                                 {% csrf_token %}
-                                <button type="submit">Logout</button>
+                                <button type="submit" class="logout-button">Logout</button>
                             </form>
                             <a class="dropdown-item" href="{% url 'password_change' %}">Change password</a>
                         </div>
@@ -47,3 +44,37 @@
         </div>
     </div>
 </nav>
+
+<style>
+    .navbar-nav .nav-item .nav-link {
+        color: white;
+        margin-right: 15px;
+    }
+
+    .navbar-nav .nav-item .nav-link.active {
+        font-weight: bold;
+    }
+
+    .logout-button {
+        background: none;
+        border: none;
+        color: #000000;
+
+        cursor: pointer;
+        padding: 0;
+        font: inherit;
+    }
+
+
+    .logout-form {
+        display: inline;
+    }
+
+    .dropdown-menu .dropdown-item {
+        color: #212529;
+    }
+
+    .dropdown-menu .dropdown-item:hover {
+        background-color: #f8f9fa;
+    }
+</style>

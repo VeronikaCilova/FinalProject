@@ -85,7 +85,7 @@ class Review(Model):
 class Todo(Model):
     title = models.CharField(max_length=100)
     details = models.TextField()
-    date = models.DateTimeField(default=timezone.now)
+    date = models.DateField(default=timezone.now)
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, blank=True)
 
     def __str__(self):

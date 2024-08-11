@@ -36,7 +36,7 @@ from .models import Todo
 
 from django.http import JsonResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
-import openai
+
 from django.conf import settings
 
 
@@ -395,6 +395,11 @@ class TodoForm(forms.ModelForm):
         fields = "__all__"
         #exclude = ["profile"]
 
+    date = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'date'}),
+        required=True,
+        label='Date'
+    )
 
 
 @login_required
@@ -445,27 +450,3 @@ def remove(request, item_id):
 
 
 
-@csrf_exempt
-def chatbot_view(request):
-    if request.method == 'POST':
-        try:
-            user_message = request.POST.get('message', '')
-
-
-            if not user_message:
-                return JsonResponse({'error': 'No message provided'}, status=400)
-
-
-            openai.api_key = settings.OPENAI_API_KEY
-            response = openai.Completion.create(
-                engine="text-davinci-003",
-                prompt=user_message,
-                max_tokens=150
-            )
-
-
-            return JsonResponse({'response': response.choices[0].text.strip()})
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
-    else:
-        return JsonResponse({'error': 'Invalid request'}, status=400)
