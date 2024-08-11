@@ -370,8 +370,9 @@ class ReviewCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     def form_valid(self, form):
         user = self.request.user
         evaluator = Profile.objects.get(user=user)
-        id_goal = int(form.cleaned_data['goal'])
-        goal = Goal.objects.get(id=id_goal)
+        # id_goal = int(form.cleaned_data['goal'])
+        goal = form.cleaned_data['goal']
+        # goal = Goal.objects.get(id=id_goal)
         subject_of_review = goal.profile
         Review.objects.create(
             evaluator=evaluator,
