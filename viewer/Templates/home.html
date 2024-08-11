@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -42,7 +44,23 @@
 <body>
 
     <div>
-        <h1>Welcome to Personal Portal application</h1>
+        <h1 style="padding-bottom: 20px;">Welcome to Personal Portal application</h1>
+
+        <div class="company-image" style="padding-bottom: 20px;">
+            <span class="company-banner">
+                <img src="{% static 'img_banner_firma.jpg' %}" alt="Banner" style="width:100%;">
+            </span>
+            <h6 style="padding: 5px;">
+                Welcome to Personal Portal, the ultimate platform for enhancing workplace productivity
+                and growth. Whether you're a leader guiding a team or an employee striving for excellence,
+                our Personal Portal empowers you to set goals, give and receive performance reviews,
+                and gather valuable feedback—all in one place. Our intuitive tools help you track progress,
+                follow up on tasks, and even plan essential training sessions, ensuring continuous improvement
+                and success. Sign up today and take control of your professional development with our Personal Portal,
+                where every goal leads to growth.
+            </h6>
+        </div>
+
         {% if user.is_authenticated %}
             <p>Hello, {{ user.first_name }}!</p>
             <p><a href="{% url 'logout' %}" class="button">Logout</a></p>

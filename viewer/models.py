@@ -72,7 +72,8 @@ class Review(Model):
     description = TextField(null=True, blank=True)
     evaluator = ForeignKey(Profile, related_name='evaluations', on_delete=DO_NOTHING)
     subject_of_review = ForeignKey(Profile, related_name='reviews', on_delete=DO_NOTHING)
-    goal = CharField(max_length=500, null=True, blank=True)
+    goal = ForeignKey(Goal, null=True, blank=True, on_delete=DO_NOTHING)
+    # goal = CharField(max_length=160, null=True, blank=True)
     training = CharField(max_length=250, null=True, blank=True)
 
     # class Meta:

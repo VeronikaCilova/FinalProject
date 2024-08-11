@@ -5,6 +5,7 @@ from operator import attrgetter
 
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
+from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.core.exceptions import ValidationError
 from django.db.transaction import atomic
@@ -56,7 +57,7 @@ class SubmittablePasswordChangeView(PasswordChangeView):
 
 class SignUpForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
-        fields = ['username','first_name', 'last_name', 'password1', 'password2']
+        fields = ['username', 'first_name', 'last_name', 'password1', 'password2']
 
     #position = CharField(label='What is your position', widget=Textarea)
     position = ModelChoiceField(queryset=Position.objects.all())
@@ -93,7 +94,6 @@ class MyProfileView(View):
         if Profile.objects.filter(user=user).exists():  # otestujeme, zda profil existuje
             result = Profile.objects.get(user=user)
             return render(request, 'user_page.html', {'title': 'MyProfile', 'profile': result})
-
 
         return render(request, 'home.html')
 
@@ -142,9 +142,14 @@ def user_page(request, pk):
     total_goals = goals.count()
     completed_goals = goals.filter(status=Status.DONE).count()
     progress = (completed_goals / total_goals) * 100 if total_goals > 0 else 0
-    return render(request, 'user_page.html', {'profile': profile, 'feedbacks': feedbacks, 'subordinates': subordinates,'progress': progress,
+    return render(request, 'user_page.html', {
+        'profile': profile,
+        'feedbacks': feedbacks,
+        'subordinates': subordinates,
+        'progress': progress,
         'total_goals': total_goals,
-        'completed_goals': completed_goals,})
+        'completed_goals': completed_goals,
+    })
 
 
 class ProfileUpdateForm(ModelForm):
@@ -164,10 +169,7 @@ def update_profile(request, pk):
     else:
         form = ProfileUpdateForm(instance=profile)
 
-
-
     return render(request, 'update_profile.html', {'form': form})
-
 
 
 class FeedbackForm(ModelForm):
@@ -254,6 +256,17 @@ class GoalCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
         LOGGER.warning('User provided invalid data.')
         return super().form_invalid()
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        profile = Profile.objects.get(user=self.request.user)
+        username = profile.user.username
+        if username:
+            mysubordinate = profile.subordinate.all()
+            mysubordinate_profile = User.objects.filter(profile__in=mysubordinate)
+        context["mysubordinate_profile"] = mysubordinate_profile
+        context["myprofile"] = profile
+        return context
+
 
 class GoalUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     template_name = 'form_goal.html'
@@ -265,6 +278,17 @@ class GoalUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     def form_invalid(self, form):
         LOGGER.warning('User provided invalid data.')
         return super().form_invalid()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        profile = Profile.objects.get(user=self.request.user)
+        username = profile.user.username
+        if username:
+            mysubordinate = profile.subordinate.all()
+            mysubordinate_profile = User.objects.filter(profile__in=mysubordinate)
+        context["mysubordinate_profile"] = mysubordinate_profile
+        context["myprofile"] = profile
+        return context
 
 
 class GoalDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
@@ -291,6 +315,7 @@ class ReviewsView(LoginRequiredMixin, View):
         profile = Profile.objects.get(user=self.request.user)
         myreviews = Review.objects.filter(subject_of_review=profile).order_by('-creation_date')
         evaluation = profile.subordinate.all()
+        # evaluation.ordering = ['-creation_date']
         context = {'reviews': myreviews, 'evaluations': evaluation}
         return render(request, 'reviews.html', context)
 
@@ -345,8 +370,9 @@ class ReviewCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     def form_valid(self, form):
         user = self.request.user
         evaluator = Profile.objects.get(user=user)
-        id_goal = int(form.cleaned_data['goal'])
-        goal = Goal.objects.get(id=id_goal)
+        # id_goal = int(form.cleaned_data['goal'])
+        goal = form.cleaned_data['goal']
+        # goal = Goal.objects.get(id=id_goal)
         subject_of_review = goal.profile
         Review.objects.create(
             evaluator=evaluator,
@@ -388,7 +414,6 @@ class ReviewDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     permission_required = 'viewer.delete_review'
 
 
-
 class TodoForm(forms.ModelForm):
     class Meta:
         model = Todo
@@ -400,7 +425,6 @@ class TodoForm(forms.ModelForm):
         required=True,
         label='Date'
     )
-
 
 @login_required
 def productivity(request):

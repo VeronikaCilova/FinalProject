@@ -12,7 +12,7 @@
                     <a class="nav-item nav-link {% if request.path == user_page %}active{% endif %}" href="{% url 'user_page' user.id %}">Profile</a>
                     <a class="nav-item nav-link {% if request.path == goals %}active{% endif %}" href="{% url 'goals' %}">Goals</a>
                     <a id="reviewsLink" class="nav-item nav-link {% if request.path == reviews %}active{% endif %}" href="{% url 'reviews' %}">Reviews</a>
-                    <a class="nav-item nav-link {% if request.path == send_kudos %}active{% endif %}" href="{% url 'send_kudos' %}">Send KUDOS</a>
+                    <a class="nav-item nav-link {% if request.path == send_kudos %}active{% endif %}" href="{% url 'send_kudos' %}">Kudos</a>
                     <a class="nav-item nav-link {% if request.path == todo %}active{% endif %}" href="{% url 'todo' %}">Productivity</a>
                 {% endif %}
             </div>
