@@ -1,14 +1,17 @@
+<title>To-Do List | Personal Portal</title>
+
 {% extends 'base.html' %}
 
 {% block content %}
 <head>
-  <title>{{ title }}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <style>
+    textarea { width: 17em}
+
     .card {
       border-radius: 15px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
@@ -78,7 +81,7 @@
       color: #04AA6D;
       font-weight: bold;
       text-align: center;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
     }
   </style>
 </head>
@@ -94,7 +97,7 @@
 
   <div class="row mb-4">
     <div class="col-12">
-      <h1 class="display-4">TO DO LIST</h1>
+      <h1 class="display-4">To-Do List</h1>
       <hr />
     </div>
   </div>
@@ -107,8 +110,8 @@
             <h4 class="mb-0">{{ i.title }}</h4>
           </div>
           <div class="card-body">
-            <p class="text-muted"><i>{{ i.date }}</i></p>
-            <p >{{ i.details }}</p>
+            <p class="text-muted"><i>{{ i.date|date:"j. n. Y" }}</i></p>
+            <p>{{ i.details }}</p>
             <div class="text-right">
               <a href="{% url 'edit_item' i.id %}" class="btn btn-warning">Edit</a>
               <form action="/del/{{ i.id }}" method="POST" style="display: inline;">

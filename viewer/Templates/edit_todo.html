@@ -1,13 +1,17 @@
+<title>Edit To-Do | Personal Portal</title>
+
 {% extends 'base.html' %}
 
 {% block content %}
 <div class="container mt-5">
-    <h2>Edit Item</h2>
+    <h2>Edit To-Do</h2>
+    {% if user.is_authenticated %}
     <form method="POST">
         {% csrf_token %}
         {{ forms.as_p }}
         <button type="submit" class="btn btn-success" style="background-color: #04AA6D">Save changes</button>
         <a href="{% url 'todo' %}" class="btn btn-primary" onclick="history.back()">Cancel</a>
     </form>
+    {% endif %}
 </div>
 {% endblock %}

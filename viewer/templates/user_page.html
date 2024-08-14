@@ -59,7 +59,7 @@
     }
 
     .progress-bar {
-      background-color: #4cae4c;
+      background-color: #04AA6D;
       height: 24px;
       width: 0;
       border-radius: 12px;
@@ -81,7 +81,7 @@
 </head>
 
 <div class="profile-details">
-    <h1 style="color: #4cae4c">{{ profile.user.first_name }} {{ profile.user.last_name }}</h1>
+    <h1 style="color: #04AA6D">{{ profile.user.first_name }} {{ profile.user.last_name }}</h1>
     <div class="profile-images">
         <span class="profile-image">
             <img src="{{ profile.picture.url }}" alt="Profile Picture" width="150px">
@@ -94,14 +94,14 @@
 </div>
 
 <div class="progress-container">
-    <div class="progress-bar" style="width: {{ progress }}%;"></div>
+    <div class="progress-bar" style="width:{{ progress }}%;"></div>
 </div>
 <div class="progress-label">
-    Completed {{ completed_goals }} out of {{ total_goals }} goals ({{ progress }}%)
+    Completed {{ completed_goals }} out of {{ total_goals }} goals ({{ progress|floatformat:"0" }}%)
 </div>
 
 <div class="kudos-section">
-    <h2 style="color: #4cae4c">Kudos</h2>
+    <h2 style="color: #04AA6D">Kudos</h2>
 
     {% for feedback in feedbacks %}
         <div class="kudos-item">
@@ -112,7 +112,7 @@
 </div>
 
 <div class="mysubordinate">
-    <h2 style="color: #4cae4c">My Team</h2>
+    <h2 style="color: #04AA6D">My Team</h2>
     {% for subordinate in subordinates %}
         <div>
             <a href="{% url 'profile_view' subordinate.id %}">

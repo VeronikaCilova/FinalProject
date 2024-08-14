@@ -42,9 +42,20 @@
   background-color: #04AA6D;
   color: white;
 }
+.display-4 {
+    color: #04AA6D;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+}
 </style>
 
-<h1>My Reviews Summary</h1>
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="display-4">My Reviews Summary</h1>
+        <hr />
+    </div>
+</div>
 
 {% if user.is_authenticated %}
 
