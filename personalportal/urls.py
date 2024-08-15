@@ -23,9 +23,6 @@ from viewer.views import ProfileView, home
 from viewer import views
 from django.urls import path
 
-
-
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home, name='home'),
@@ -41,9 +38,6 @@ urlpatterns = [
     path('profile/update/<pk>/', update_profile, name='update_profile'),
     path('profile/<pk>/', ProfileView.as_view(), name='profile_view'),
 
-
-
-
     path('goals/', GoalsView.as_view(), name='goals'),
     path('goal/create/', GoalCreateView.as_view(), name='goal_create'),
     path('goal/update/<pk>/', GoalUpdateView.as_view(), name='goal_update'),
@@ -56,10 +50,8 @@ urlpatterns = [
     path('review/delete/<pk>/', ReviewDeleteView.as_view(), name='review_delete'),
     path('review/<pk>/', ReviewView.as_view(), name='review'),
 
-
     path('todo/', views.productivity, name="todo"),
     path('del/<str:item_id>', views.remove, name="del"),
     path('edit/<int:item_id>/', views.edit, name='edit_item'),
-
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

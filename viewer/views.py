@@ -65,7 +65,6 @@ class ProfileView(LoginRequiredMixin, View):
             result = Profile.objects.get(id=pk)
             return render(request, 'user_page.html', {'title': 'MyProfile', 'profile': result})
 
-    # TODO: vypsat chybovou hlášku
         return render(request,
                       'user_page.html',
                       {'title': 'Profile', 'profile': Profile.objects.all()})
