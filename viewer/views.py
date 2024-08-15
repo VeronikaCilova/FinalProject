@@ -1,7 +1,5 @@
 from concurrent.futures._base import LOGGER
 from datetime import date
-from itertools import chain
-from operator import attrgetter
 
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
@@ -9,37 +7,24 @@ from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.core.exceptions import ValidationError
 from django.db.transaction import atomic
-from django.forms import CharField, Textarea, forms, ModelForm, ModelChoiceField, DateField
-from django.shortcuts import render, redirect, get_object_or_404
+from django.forms import CharField, Textarea, ModelForm, ModelChoiceField, DateField
 from django.views import View
-from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import DetailView
-
 
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, FormView, UpdateView, DeleteView
 
-from viewer.models import Profile, Feedback, Position, Review, Status
-from django.shortcuts import render, redirect
+from viewer.models import Profile, Feedback, Position, Review, Status, Goal
 from django.contrib.auth.decorators import login_required
-from .models import Feedback, Profile
-from viewer.models import Profile, Goal
 import re
-
-from django.shortcuts import render, redirect
-from django.contrib import messages
-
 
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django import forms
 from .models import Todo
 
-from django.http import JsonResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
-
 from django.conf import settings
-
 
 
 def home(request):
@@ -59,7 +44,6 @@ class SignUpForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         fields = ['username', 'first_name', 'last_name', 'password1', 'password2']
 
-    #position = CharField(label='What is your position', widget=Textarea)
     position = ModelChoiceField(queryset=Position.objects.all())
     bio = CharField(label='Tell us more about you', widget=Textarea, min_length=5)
 
@@ -85,7 +69,6 @@ class ProfileView(LoginRequiredMixin, View):
         return render(request,
                       'user_page.html',
                       {'title': 'Profile', 'profile': Profile.objects.all()})
-
 
 
 class MyProfileView(View):
@@ -336,8 +319,9 @@ class ReviewForm(ModelForm):
     #     return initial.capitalize()
 
     def clean_description(self):
-        # Force each sentence of the description to be capitalized.
+        # Force each sentence of the description to be capitalized and replace "i am" with "I am".
         initial = self.cleaned_data['description']
+        initial = re.sub(r'\bi am\b', 'I am', initial)
         sentences = re.sub(r'\s*\.\s*', '.', initial).split('.')
         return '. '.join(sentence.capitalize() for sentence in sentences)
 
@@ -370,7 +354,6 @@ class ReviewCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     def form_valid(self, form):
         user = self.request.user
         evaluator = Profile.objects.get(user=user)
-        # id_goal = int(form.cleaned_data['goal'])
         goal = form.cleaned_data['goal']
         # goal = Goal.objects.get(id=id_goal)
         subject_of_review = goal.profile
@@ -426,6 +409,7 @@ class TodoForm(forms.ModelForm):
         label='Date'
     )
 
+
 @login_required
 def productivity(request):
     profile = Profile.objects.get(user=request.user)
@@ -449,7 +433,7 @@ def productivity(request):
 def edit(request, item_id):
     item = Todo.objects.get(id=item_id)
     if request.method == "POST":
-        form = TodoForm(request.POST,instance=item)
+        form = TodoForm(request.POST, instance=item)
         if form.is_valid():
             form.save()
             messages.success(request, "Item was updated successfully.")
@@ -468,9 +452,5 @@ def edit(request, item_id):
 def remove(request, item_id):
     item = Todo.objects.get(id=item_id)
     item.delete()
-    messages.info(request, "item was removed !!!")
+    messages.info(request, "Item was removed!!!")
     return redirect('todo')
-
-
-
-
